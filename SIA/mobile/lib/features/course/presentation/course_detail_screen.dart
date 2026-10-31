@@ -41,7 +41,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
   void _setupCourseData() {
     switch (widget.courseId) {
       case 1: // مهندسی نرم‌افزار ۱
-        _schedule = 'شنبه و دوشنبه ۱۰:۰۰ الی ۱۱:۳۰';
+        _schedule = ' یکشنبه و سه‌شنبه ۰۸:۰۰ الی ۱۰:۰۰';
         _location = 'دانشکده کامپیوتر - کلاس ۱۰۴';
         _about = 'آشنایی با متدولوژی‌های چابک، چرخه حیات نرم‌افزار، تحلیل نیازمندی‌ها، مدل‌سازی با UML و اصول معماری تمیز در مهندسی نرم‌افزار.';
         _chapters = [
@@ -54,7 +54,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
         break;
 
       case 2: // پایگاه داده‌ها
-        _schedule = 'یکشنبه و سه‌شنبه ۱۳:۳۰ الی ۱۵:۰۰';
+        _schedule = 'شنبه و دوشنبه ۱۳:۳۰ الی ۱۵:۳۰';
         _location = 'دانشکده کامپیوتر - کلاس ۲۰۲';
         _about = 'مفاهیم بنیادی مدل رابطه‌ای، طراحی نمودار ER، نرمال‌سازی جداول، کوئری‌نویسی پیشرفته SQL و مبانی تراکنش‌ها (ACID).';
         _chapters = [
@@ -114,26 +114,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
             icon: const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 22),
             onPressed: () => Navigator.pop(context),
           ),
-          title: Row(
-            children: [
-              Text(
-                widget.title,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: tagBlueBg,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Text(
-                  'اسپرینت ۱',
-                  style: TextStyle(fontSize: 10, color: tagBlueFg, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
+          
         ),
         body: Column(
           children: [
