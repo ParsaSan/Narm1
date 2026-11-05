@@ -190,6 +190,8 @@ class _CourseListScreenState extends State<CourseListScreen> {
                                 MaterialPageRoute(
                                   builder: (_) => CourseDetailScreen(
                                     courseId: course.id,
+                                    title: course.title,
+                                    instructor: course.instructor,
                                   ),
                                 ),
                               ),
