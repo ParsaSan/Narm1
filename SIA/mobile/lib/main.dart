@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 // ایمپورت صفحه پروفایل (مطابق با ساختار پوشه features/profile)
+import 'features/dashboard/dashboard_screen.dart';
 import 'features/profile/screens/student_profile_screen.dart';
 // ایمپورت صفحه کاتالوگ دوره‌ها
 
@@ -26,7 +27,7 @@ class SiamApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // برای نمایش مستقیم صفحه پروفایل دانشجو:
-      home: const StudentProfileScreen(),
+      home: const DashboardScreen(),
 
       // اگر خواستید لیست دوره‌ها را ببینید، خط بالا را کامنت کنید و خط زیر را فعال کنید:
       // home: const CourseListScreen(),

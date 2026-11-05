@@ -1,0 +1,9 @@
+<<<<<<< HEAD
+=======
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - windows/**
+include: package:flutter_lints/flutter.yaml
+>>>>>>> 9bc80bdd537d9c15b04303ed6cf4902c1296ded1
