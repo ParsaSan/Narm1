@@ -111,10 +111,12 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
           backgroundColor: bgColor,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 22),
+            icon: Transform.flip(
+              flipX: false, // 👈 این خط فلش رو آینه‌ای و برعکس می‌کنه
+              child: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 22),
+            ),
             onPressed: () => Navigator.pop(context),
           ),
-          
         ),
         body: Column(
           children: [

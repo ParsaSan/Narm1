@@ -1,8 +1,0 @@
-ir\pgu\dashboard\repository\BannerRepository.class
-ir\pgu\dashboard\model\Banner.class
-ir\pgu\dashboard\model\RecentCourse.class
-ir\pgu\dashboard\repository\RecentCourseRepository.class
-ir\pgu\dashboard\controller\DashboardController.class
-ir\pgu\SiaApplication.class
-ir\pgu\dashboard\model\DashboardStats.class
-ir\pgu\dashboard\service\DashboardService.class
