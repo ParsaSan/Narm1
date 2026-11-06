@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../data/course_model.dart';
+import '../data/course_api_service.dart';
 import 'widgets/course_card.dart';
-import 'course_detail_screen.dart'; // فایل پارسا
+import 'course_detail_screen.dart';
 
 class CourseListScreen extends StatefulWidget {
   const CourseListScreen({super.key});
@@ -16,59 +17,39 @@ class _CourseListScreenState extends State<CourseListScreen> {
   String _selectedFilter = 'همه';
   String _query = '';
 
-  // داده‌ی آزمایشی؛ بعداً با GET /api/courses جایگزین می‌شود
-  final List<Course> _allCourses = const [
-    Course(
-      id: 1, code: 'CE-401', title: 'مهندسی نرم‌افزار ۱',
-      englishTitle: 'Software Engineering I',
-      description: 'آشنایی با متدولوژی‌های چابک، چرخه حیات نرم‌افزار، تحلیل نیازمندی‌ها، مدل‌سازی با UML و اصول معماری تمیز در مهندسی نرم‌افزار.',
-      units: 3, type: 'تخصصی', instructor: 'دکتر مریم رضایی', isEnrolled: true,
-    ),
-    Course(
-      id: 2, code: 'CE-402', title: 'پایگاه داده‌ها',
-      englishTitle: 'Database Systems',
-      description: 'مفاهیم بنیادی سیستم‌های مدیریت پایگاه داده رابطه‌ای، مدل‌سازی ER، جبر رابطه‌ای، زبان SQL و نرمال‌سازی جداول.',
-      units: 3, type: 'تخصصی', instructor: 'دکتر علی کاظمی', isEnrolled: true,
-    ),
-    Course(
-      id: 3, code: 'CE-403', title: 'طراحی الگوریتم‌ها',
-      englishTitle: 'Design and Analysis of Algorithms',
-      description: 'تحلیل مجانبی زمان و فضای الگوریتم‌ها، روش تقسیم و حل، روش حریصانه، برنامه‌نویسی پویا و الگوریتم‌های گراف.',
-      units: 3, type: 'تخصصی', instructor: 'دکتر حمید هاشمی', isEnrolled: true,
-    ),
-    Course(
-      id: 4, code: 'CE-404', title: 'شبکه‌های کامپیوتری',
-      englishTitle: 'Computer Networks',
-      description: 'بررسی لایه‌ای معماری شبکه بر مبنای مدل اینترنت و OSI، پروتکل‌های لایه کاربرد، انتقال (TCP/UDP)، شبکه (IP) و پیوند داده.',
-      units: 3, type: 'تخصصی', instructor: 'دکتر بهزاد میرزایی', isEnrolled: true,
-    ),
-    Course(
-      id: 5, code: 'CE-501', title: 'هوش مصنوعی و سیستم‌های خبره',
-      englishTitle: 'Artificial Intelligence',
-      description: 'عامل‌های هوشمند، جستجوهای آگاهانه و ناآگاهانه، مسائل ارضای محدودیت (CSP)، بازی‌ها و مبانی یادگیری ماشین.',
-      units: 3, type: 'تخصصی', instructor: 'دکتر نرگس سلیمانی',
-    ),
-    Course(
-      id: 6, code: 'CE-405', title: 'سیستم‌های عامل',
-      englishTitle: 'Operating Systems',
-      description: 'مدیریت پردازه‌ها و نخ‌ها، زمان‌بندی CPU، همگام‌سازی و بن‌بست، مدیریت حافظه اصلی و حافظه مجازی.',
-      units: 3, type: 'تخصصی', instructor: 'دکتر یزدان نادری',
-    ),
-    Course(
-      id: 7, code: 'CE-101', title: 'مبانی برنامه‌نویسی',
-      englishTitle: 'Fundamentals of Programming',
-      description: 'آموزش اصول الگوریتم، متغیرها، ساختارهای کنترلی، توابع، آرایه‌ها، اشاره‌گرها و ورودی/خروجی فایل به زبان C/C++.',
-      units: 3, type: 'پایه', instructor: 'مهندس کیانپور',
-    ),
-    Course(
-      id: 8, code: 'GEN-201', title: 'زبان تخصصی کامپیوتر',
-      englishTitle: 'Technical English for Computer Engineers',
-      description: 'متون تخصصی علوم کامپیوتر، اصطلاحات مهندسی نرم‌افزار، شبکه، نگارش رزومه و مقالات علمی فنی.',
-      units: 2, type: 'عمومی', instructor: 'دکتر فیروزبخش',
-    ),
-  ];
+  // لیست دروس که از سرور دریافت می‌شود
+  List<Course> _allCourses = [];
+  bool _isLoading = true;
+  String? _errorMessage;
 
-  // یکسان‌سازی «ي/ك» عربی با «ی/ک» فارسی تا جستجو دقیق‌تر شود
+  @override
+  void initState() {
+    super.initState();
+    _fetchCoursesFromServer();
+  }
+
+  // دریافت اطلاعات زنده از بک‌اند اسپرینگ‌بوت
+  Future<void> _fetchCoursesFromServer() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final courses = await CourseApiService.fetchCourses();
+      setState(() {
+        _allCourses = courses;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'خطا در برقراری ارتباط با سرور. آیا بک‌اند روشن است؟';
+        _isLoading = false;
+      });
+    }
+  }
+
+  // یکسان‌سازی حروف عربی و فارسی برای جستجوی دقیق‌تر
   String _norm(String s) => s
       .replaceAll('ي', 'ی')
       .replaceAll('ك', 'ک')
@@ -101,106 +82,137 @@ class _CourseListScreenState extends State<CourseListScreen> {
             'فهرست دروس دانشگاهی',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: 'بروزرسانی از سرور',
+              onPressed: _fetchCoursesFromServer,
+            ),
+          ],
         ),
         body: Center(
-          // روی صفحه‌های عریض، لیست کش نمی‌آید
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 700),
-            child: Column(
-              children: [
-                // نوار جستجوی زنده
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-                  child: TextField(
-                    onChanged: (v) => setState(() => _query = v),
-                    decoration: InputDecoration(
-                      hintText: 'جستجوی نام درس، استاد یا کد درس...',
-                      hintStyle: const TextStyle(fontSize: 13),
-                      suffixIcon: const Icon(Icons.search),
-                      filled: true,
-                      fillColor: cs.surfaceContainer,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide:
-                            BorderSide(color: cs.outlineVariant.withOpacity(0.5)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide:
-                            BorderSide(color: cs.outlineVariant.withOpacity(0.5)),
-                      ),
-                    ),
-                  ),
-                ),
-
-                // چیپ‌های فیلتر
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: _filters.map((f) {
-                      return Padding(
-                        padding: const EdgeInsetsDirectional.only(end: 8),
-                        child: ChoiceChip(
-                          label: Text(f),
-                          selected: _selectedFilter == f,
-                          showCheckmark: false,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          onSelected: (_) =>
-                              setState(() => _selectedFilter = f),
+            child: _isLoading
+                // حالت در حال بارگذاری از سرور
+                ? const Center(child: CircularProgressIndicator())
+                : _errorMessage != null
+                    // حالت بروز خطا در اتصال به بک‌اند
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.cloud_off, size: 64, color: Colors.grey),
+                            const SizedBox(height: 16),
+                            Text(_errorMessage!, style: const TextStyle(fontSize: 14)),
+                            const SizedBox(height: 12),
+                            ElevatedButton.icon(
+                              onPressed: _fetchCoursesFromServer,
+                              icon: const Icon(Icons.refresh),
+                              label: const Text('تلاش مجدد'),
+                            ),
+                          ],
                         ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-
-                // تعداد نتایج
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Text(
-                      'تعداد دروس یافت‌شده: ${courses.length} درس',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: cs.onSurface.withOpacity(0.6),
-                      ),
-                    ),
-                  ),
-                ),
-
-                // لیست دروس
-                Expanded(
-                  child: courses.isEmpty
-                      ? const Center(child: Text('درسی پیدا نشد'))
-                      : ListView.separated(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: courses.length,
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(height: 12),
-                          itemBuilder: (context, i) {
-                            final course = courses[i];
-                            return CourseCard(
-                              course: course,
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => CourseDetailScreen(
-                                    courseId: course.id,
-                                    title: course.title,
-                                    instructor: course.instructor,
+                      )
+                    // نمایش لیست بعد از دریافت موفقیت‌آمیز
+                    : RefreshIndicator(
+                        onRefresh: _fetchCoursesFromServer,
+                        child: Column(
+                          children: [
+                            // کادر جستجو
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                              child: TextField(
+                                onChanged: (v) => setState(() => _query = v),
+                                decoration: InputDecoration(
+                                  hintText: 'جستجوی نام درس، استاد یا کد درس...',
+                                  hintStyle: const TextStyle(fontSize: 13),
+                                  suffixIcon: const Icon(Icons.search),
+                                  filled: true,
+                                  fillColor: cs.surfaceContainer,
+                                  contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        color: cs.outlineVariant.withOpacity(0.5)),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        color: cs.outlineVariant.withOpacity(0.5)),
                                   ),
                                 ),
                               ),
-                            );
-                          },
+                            ),
+
+                            // چیپ‌های فیلتر
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Row(
+                                children: _filters.map((f) {
+                                  return Padding(
+                                    padding: const EdgeInsetsDirectional.only(end: 8),
+                                    child: ChoiceChip(
+                                      label: Text(f),
+                                      selected: _selectedFilter == f,
+                                      showCheckmark: false,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      onSelected: (_) =>
+                                          setState(() => _selectedFilter = f),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+
+                            // تعداد نتایج
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                              child: Align(
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  'تعداد دروس دریافتی از سرور: ${courses.length} درس',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: cs.onSurface.withOpacity(0.6),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            // لیست دروس
+                            Expanded(
+                              child: courses.isEmpty
+                                  ? const Center(child: Text('درسی پیدا نشد'))
+                                  : ListView.separated(
+                                      padding: const EdgeInsets.all(16),
+                                      itemCount: courses.length,
+                                      separatorBuilder: (_, __) =>
+                                          const SizedBox(height: 12),
+                                      itemBuilder: (context, i) {
+                                        final course = courses[i];
+                                        return CourseCard(
+                                          course: course,
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => CourseDetailScreen(
+                                                courseId: course.id,
+                                                title: course.title,
+                                                instructor: course.instructor,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                            ),
+                          ],
                         ),
-                ),
-              ],
-            ),
+                      ),
           ),
         ),
       ),
