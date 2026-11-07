@@ -1,7 +1,7 @@
-package ir.pgu.course.dto.service;
+package ir.pgu.course.service;
 
-import ir.pgu.course.dto.model.Course;
-import ir.pgu.course.dto.repository.CourseRepository;
+import ir.pgu.course.model.Course;
+import ir.pgu.course.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

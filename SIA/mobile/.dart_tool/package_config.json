@@ -3,109 +3,109 @@
   "packages": [
     {
       "name": "async",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/async-2.13.1",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/async-2.13.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
     {
       "name": "characters",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/characters-1.4.0",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/characters-1.4.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
     {
       "name": "collection",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/collection-1.19.1",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/collection-1.19.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
     {
       "name": "flutter",
-      "rootUri": "file:///C:/Users/RGMS/flutter/packages/flutter",
+      "rootUri": "file:///C:/Users/Armita/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.11"
     },
     {
       "name": "flutter_lints",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/flutter_lints-5.0.0",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/flutter_lints-5.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
     {
       "name": "http",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/http-1.6.0",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/http-1.6.0",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
     {
       "name": "http_parser",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/http_parser-4.1.2",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/http_parser-4.1.2",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
     {
       "name": "lints",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/lints-5.1.1",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/lints-5.1.1",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
     {
       "name": "material_color_utilities",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/material_color_utilities-0.11.1",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/material_color_utilities-0.13.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.5"
     },
     {
       "name": "meta",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/meta-1.16.0",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/meta-1.19.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.5"
     },
     {
       "name": "path",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/path-1.9.1",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/path-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///C:/Users/RGMS/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///C:/Users/Armita/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.11"
     },
     {
       "name": "source_span",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/source_span-1.10.2",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/source_span-1.10.2",
       "packageUri": "lib/",
       "languageVersion": "3.1"
     },
     {
       "name": "string_scanner",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/string_scanner-1.4.1",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/string_scanner-1.4.1",
       "packageUri": "lib/",
       "languageVersion": "3.1"
     },
     {
       "name": "term_glyph",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/term_glyph-1.2.2",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/term_glyph-1.2.2",
       "packageUri": "lib/",
       "languageVersion": "3.1"
     },
     {
       "name": "typed_data",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/typed_data-1.4.0",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/typed_data-1.4.0",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     },
     {
       "name": "vector_math",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/vector_math-2.2.0",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/vector_math-2.4.4",
       "packageUri": "lib/",
-      "languageVersion": "3.1"
+      "languageVersion": "3.10"
     },
     {
       "name": "web",
-      "rootUri": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/web-1.1.1",
+      "rootUri": "file:///C:/Users/Armita/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/web-1.1.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -117,8 +117,8 @@
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.9.2",
-  "flutterRoot": "file:///C:/Users/RGMS/flutter",
-  "flutterVersion": "3.35.4",
-  "pubCache": "file:///C:/Users/RGMS/AppData/Local/Pub/Cache"
+  "generatorVersion": "3.13.7",
+  "flutterRoot": "file:///C:/Users/Armita/flutter",
+  "flutterVersion": "3.47.8",
+  "pubCache": "file:///C:/Users/Armita/AppData/Local/Pub/Cache"
 }

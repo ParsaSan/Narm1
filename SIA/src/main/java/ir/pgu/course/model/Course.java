@@ -1,4 +1,4 @@
-package ir.pgu.course.dto.model;
+package ir.pgu.course.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
