@@ -1,8 +1,13 @@
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\config\CourseDataInitializer.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\config\CourseDetailInitializer.java
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\config\ProfileDataInitializer.java
-E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\config\repository\CourseRepository.java
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\course\controller\CourseController.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\course\controller\CourseDetailController.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\course\dto\CourseDetailResponse.java
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\course\model\Course.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\course\model\CourseDetail.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\course\repository\CourseDetailRepository.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\course\repository\CourseRepository.java
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\course\service\CourseService.java
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\controller\DashboardController.java
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\model\Banner.java

@@ -1,105 +1,133 @@
 package ir.pgu.config;
 
-import ir.pgu.course.dto.model.Course;
-import ir.pgu.course.dto.repository.CourseRepository;
+import ir.pgu.course.model.Course;
+import ir.pgu.course.repository.CourseDetailRepository;
+import ir.pgu.course.repository.CourseRepository;
+import ir.pgu.profile.repository.EnrolledCourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@Order(1)
 @RequiredArgsConstructor
 public class CourseDataInitializer implements CommandLineRunner {
 
     private final CourseRepository courseRepository;
+    private final CourseDetailRepository courseDetailRepository;
+    private final EnrolledCourseRepository enrolledCourseRepository;
 
     @Override
     public void run(String... args) {
-        // اگر قبلاً دیتابیس خالی بوده باشد، درس‌ها را ثبت می‌کند
-        if (courseRepository.count() == 0) {
-            List<Course> defaultCourses = List.of(
-                // ۱. مهندسی نرم‌افزار ۱
-                new Course(
-                    null,
-                    "110711306",
-                    "مهندسی نرم‌افزار ۱",
-                    "Software Engineering I",
-                    "آشنایی با متدولوژی‌های چابک (Agile)، چرخه حیات نرم‌افزار، تحلیل نیازمندی‌ها، مدل‌سازی با UML و اصول معماری نرم‌افزار.",
-                    3,
-                    "تخصصی",
-                    "ابراهیم صحافی زاده",
-                    true
-                ),
+        // ابتدا جداول وابسته (فرزند) را پاک می‌کنیم تا خطای Foreign Key رخ ندهد
+        enrolledCourseRepository.deleteAll();
+        courseDetailRepository.deleteAll();
+        courseRepository.deleteAll();
 
-                // ۲. طراحی پایگاه داده‌ها
-                new Course(
-                    null,
-                    "110711308",
-                    "طراحی پایگاه داده‌ها",
-                    "Database Design",
-                    "مفاهیم بنیادی سیستم‌های مدیریت پایگاه داده رابطه‌ای، مدل‌سازی داده با ER، جبر رابطه‌ای، زبان SQL و اصول نرمال‌سازی.",
-                    3,
-                    "تخصصی",
-                    "سعید طلعتیان آزاد",
-                    true
-                ),
+        List<Course> defaultCourses = List.of(
+            // ۱. مهندسی نرم‌افزار ۱
+            new Course(
+                null, "110711306", "مهندسی نرم‌افزار ۱", "Software Engineering I",
+                "آشنایی با متدولوژی‌های چابک (Agile)، چرخه حیات نرم‌افزار، تحلیل نیازمندی‌ها، مدل‌سازی با UML و اصول معماری نرم‌افزار.",
+                3, "تخصصی", "ابراهیم صحافی زاده", true
+            ),
 
-                // ۳. سیستم‌های عامل
-                new Course(
-                    null,
-                    "110711305",
-                    "سیستم‌های عامل",
-                    "Operating Systems",
-                    "بررسی ساختار سیستم‌عامل، مدیریت پردازه‌ها و نخ‌ها، الگوریتم‌های زمان‌بندی CPU، همگام‌سازی، بن‌بست و مدیریت حافظه.",
-                    3,
-                    "تخصصی",
-                    "مریم روشن",
-                    true
-                ),
+            // ۲. طراحی پایگاه داده‌ها
+            new Course(
+                null, "110711308", "طراحی پایگاه داده‌ها", "Database Design",
+                "مفاهیم بنیادی سیستم‌های مدیریت پایگاه داده رابطه‌ای، مدل‌سازی داده با ER، جبر رابطه‌ای، زبان SQL و اصول نرمال‌سازی.",
+                3, "تخصصی", "سعید طلعتیان آزاد", true
+            ),
 
-                // ۴. طراحی کامپایلرها
-                new Course(
-                    null,
-                    "110711309",
-                    "طراحی کامپایلرها",
-                    "Compiler Design",
-                    "ساختار کلی کامپایلرها، تحلیل لغوی (Lexical)، تجزیه نحوی (Parsing)، تحلیل معنایی و اصول تولید و بهینه‌سازی کدهای میانی.",
-                    3,
-                    "تخصصی",
-                    "حبیب رستمی",
-                    false
-                ),
+            // ۳. سیستم‌های عامل
+            new Course(
+                null, "110711305", "سیستم‌های عامل", "Operating Systems",
+                "بررسی ساختار سیستم‌عامل، مدیریت پردازه‌ها و نخ‌ها، الگوریتم‌های زمان‌بندی CPU، همگام‌سازی، بن‌بست و مدیریت حافظه.",
+                3, "تخصصی", "مریم روشن", true
+            ),
 
-                // ۵. طراحی الگوریتم‌ها
-                new Course(
-                    null,
-                    "1107015",
-                    "طراحی الگوریتم‌ها",
-                    "Design and Analysis of Algorithms",
-                    "تحلیل پیچیدگی زمانی و مکانی مجانبی، روش تقسیم و حل، روش‌های حریصانه، برنامه‌نویسی پویا و الگوریتم‌های پیشرفته گراف.",
-                    3,
-                    "تخصصی",
-                    "حبیب رستمی",
-                    false
-                ),
+            // ۴. طراحی کامپایلرها
+            new Course(
+                null, "110711309", "طراحی کامپایلرها", "Compiler Design",
+                "ساختار کلی کامپایلرها، تحلیل لغوی (Lexical)، تجزیه نحوی (Parsing)، تحلیل معنایی و اصول تولید و بهینه‌سازی کدهای میانی.",
+                3, "تخصصی", "حبیب رستمی", false
+            ),
 
-                // ۶. زبان تخصصی
-                new Course(
-                    null,
-                    "1107009",
-                    "زبان تخصصی",
-                    "Technical English for Computer Engineers",
-                    "مطالعه و ترجمه متون پیشرفته مهندسی کامپیوتر، درک اصطلاحات فنی نرم‌افزار و شبکه، و اصول نگارش مستندات علمی و فنی.",
-                    2,
-                    "تخصصی",
-                    "سعید طلعتیان آزاد",
-                    false
-                )
-            );
+            // ۵. طراحی الگوریتم‌ها
+            new Course(
+                null, "1107015", "طراحی الگوریتم‌ها", "Design and Analysis of Algorithms",
+                "تحلیل پیچیدگی زمانی و مکانی مجانبی، روش تقسیم و حل، روش‌های حریصانه، برنامه‌نویسی پویا و الگوریتم‌های پیشرفته گراف.",
+                3, "تخصصی", "حبیب رستمی", false
+            ),
 
-            courseRepository.saveAll(defaultCourses);
-            System.out.println(">>> دروس دانشگاهی با موفقیت در دیتابیس بارگذاری شدند.");
-        }
+            // ۶. زبان تخصصی
+            new Course(
+                null, "1107009", "زبان تخصصی", "Technical English for Computer Engineers",
+                "مطالعه و ترجمه متون پیشرفته مهندسی کامپیوتر، درک اصطلاحات فنی نرم‌افزار و شبکه، و اصول نگارش مستندات علمی و فنی.",
+                2, "عمومی", "سعید طلعتیان آزاد", false
+            ),
+
+            // ۷. برنامه نویسی پیشرفته
+            new Course(
+                null, "1107005", "برنامه نویسی پیشرفته", "Advanced Programming",
+                "مفاهیم برنامه‌نویسی شیءگرا (OOP)، کلاس‌ها، وراثت، چندریختی، مدیریت استثناها، کار با فایل‌ها و پیاده‌سازی الگوهای طراحی.",
+                3, "تخصصی", "حبیب رستمی", false
+            ),
+
+            // ۸. ریاضیات گسسته
+            new Course(
+                null, "1107054", "ریاضیات گسسته", "Discrete Mathematics",
+                "مبانی منطق ریاضی، سورها، نظریه مجموعه‌ها، روابط، تابع‌ها، اصول شمارش، ترکیبیات، ساختارهای جبری و مبانی نظریه گراف.",
+                3, "پایه", "رضوان محمدی باغملایی", false
+            ),
+
+            // ۹. کارگاه کامپیوتر
+            new Course(
+                null, "1107088", "کارگاه کامپیوتر", "Computer Workshop",
+                "آشنایی عملی با قطعات و سخت‌افزار رایانه، اسمبل کردن سیستم، نصب و پیکربندی سیستم‌عامل‌ها، درایورها و ابزارهای کاربردی شبکه.",
+                1, "پایه", "علی جمالی", false
+            ),
+
+            // ۱۰. مبانی کامپیوتر و برنامه سازی
+            new Course(
+                null, "1107053", "مبانی کامپیوتر و برنامه سازی", "Fundamentals of Computer and Programming",
+                "معماری پایه کامپیوتر، تدوین الگوریتم و رسم فلوچارت، متغیرها، عملگرها، ساختارهای شرطی و کنترلی، توابع و آرایه‌ها.",
+                3, "پایه", "علی جمالی", false
+            ),
+
+            // ۱۱. آشنایی با صنعت کامپیوتر
+            new Course(
+                null, "711301", "آشنایی با صنعت کامپیوتر", "Introduction to Computer Industry",
+                "آشنایی با بازار کار مهندسی کامپیوتر، شرکت‌های دانش‌بنیان، اکوسیستم استارتاپی، ترندهای روز فناوری اطلاعات و اخلاق حرفه‌ای مهندسی.",
+                1, "عمومی", "حبیب رستمی", false
+            ),
+
+            // ۱۲. داده ساختار ها و الگوریتم ها
+            new Course(
+                null, "110711302", "داده ساختار ها و الگوریتم ها", "Data Structures and Algorithms",
+                "تحلیل و پیاده‌سازی ساختارهای داده خطی و غیرخطی شامل پشته (Stack)، صف (Queue)، لیست‌های پیوندی، درخت‌ها (Tree) و جداول هش.",
+                3, "تخصصی", "ابراهیم صحافی زاده", false
+            ),
+
+            // ۱۳. مدار های منطقی
+            new Course(
+                null, "1107012", "مدار های منطقی", "Logic Circuits",
+                "جبر بول، ساده‌سازی توابع با جدول کارنو، طراحی مدارهای ترکیبی (مالتی‌پلکسر، دیکدر)، مدارهای ترتیبی، فلیپ‌فلاپ‌ها و ثبات‌ها.",
+                3, "پایه", "امین ترابی جهرمی", false
+            ),
+
+            // ۱۴. مدار های الکتریکی و الکترونیکی
+            new Course(
+                null, "1107064", "مدار های الکتریکی و الکترونیکی", "Electrical and Electronic Circuits",
+                "قوانین KVL و KCL، تحلیل مدارهای مقاومتی در حالت DC و AC، عملکرد ادوات نیمه‌هادی، دیودها، ترانزیستورها و تقویت‌کننده‌های عملیاتی.",
+                3, "پایه", "مژده حیدری", false
+            )
+        );
+
+        courseRepository.saveAll(defaultCourses);
+        System.out.println(">>> تمام جداول ریست شدند و ۱۴ درس با موفقیت بارگذاری شدند.");
     }
 }

@@ -1,7 +1,7 @@
-package ir.pgu.course.dto.controller;
+package ir.pgu.course.controller;
 
-import ir.pgu.course.dto.model.Course;
-import ir.pgu.course.dto.service.CourseService;
+import ir.pgu.course.model.Course;
+import ir.pgu.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
