@@ -1,36 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-// ایمپورت صفحه پروفایل (مطابق با ساختار پوشه features/profile)
-import 'features/dashboard/dashboard_screen.dart';
-import 'features/profile/screens/student_profile_screen.dart';
-// ایمپورت صفحه کاتالوگ دوره‌ها
+import 'core/app_routes.dart';
+import 'core/theme/app_theme.dart';
+import 'features/auth/presentation/login_screen.dart';
+import 'features/auth/presentation/register_screen.dart';
+import 'features/auth/presentation/welcome_screen.dart';
+import 'shared/layout/main_layout.dart';
 
 void main() {
   runApp(const SiamApp());
 }
 
 class SiamApp extends StatelessWidget {
-  const SiamApp({Key? key}) : super(key: key);
+  const SiamApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'سامانه دانشگاهی SIA',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF070D1E),
-        colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF1D4ED8),
-          surface: Color(0xFF0E1B38),
-        ),
-        useMaterial3: true,
-      ),
-      // برای نمایش مستقیم صفحه پروفایل دانشجو:
-      home: const DashboardScreen(),
 
-      // اگر خواستید لیست دوره‌ها را ببینید، خط بالا را کامنت کنید و خط زیر را فعال کنید:
-      // home: const CourseListScreen(),
+      // تم تیره + فونت وزیرمتن برای کل اپ (رنگ‌ها همان رنگ‌های قبلی تیم است)
+      theme: AppTheme.dark,
+
+      // زبان فارسی: کل اپ خودکار راست‌به‌چپ (RTL) می‌شود
+      locale: const Locale('fa', 'IR'),
+      supportedLocales: const [Locale('fa', 'IR'), Locale('en', 'US')],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+
+      // اول صفحه‌ی خوش‌آمد؛ بعد از ورود، صفحه‌ی اصلی با منوی پایین
+      initialRoute: AppRoutes.welcome,
+      routes: {
+        AppRoutes.welcome: (_) => const WelcomeScreen(),
+        AppRoutes.login: (_) => const LoginScreen(),
+        AppRoutes.register: (_) => const RegisterScreen(),
+        AppRoutes.home: (_) => const MainLayout(),
+      },
     );
   }
 }
