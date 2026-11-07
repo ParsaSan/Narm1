@@ -42,7 +42,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
     switch (widget.courseId) {
       case 1: // مهندسی نرم‌افزار ۱
         _schedule = ' یکشنبه و سه‌شنبه ۰۸:۰۰ الی ۱۰:۰۰';
-        _location = 'دانشکده کامپیوتر - کلاس ۱۰۴';
+        _location = 'دانشکده کامپیوتر - کلاس B8';
         _about = 'آشنایی با متدولوژی‌های چابک، چرخه حیات نرم‌افزار، تحلیل نیازمندی‌ها، مدل‌سازی با UML و اصول معماری تمیز در مهندسی نرم‌افزار.';
         _chapters = [
           'فصل ۱: مفاهیم چرخه‌های حیات و متدولوژی Scrum',
@@ -55,7 +55,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
 
       case 2: // پایگاه داده‌ها
         _schedule = 'شنبه و دوشنبه ۱۳:۳۰ الی ۱۵:۳۰';
-        _location = 'دانشکده کامپیوتر - کلاس ۲۰۲';
+        _location = 'دانشکده کامپیوتر - کلاس B8';
         _about = 'مفاهیم بنیادی مدل رابطه‌ای، طراحی نمودار ER، نرمال‌سازی جداول، کوئری‌نویسی پیشرفته SQL و مبانی تراکنش‌ها (ACID).';
         _chapters = [
           'فصل ۱: معماری سیستم‌های پایگاه داده و مدل داده‌ای',
@@ -68,7 +68,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
 
       case 3: // طراحی الگوریتم‌ها
         _schedule = 'دوشنبه و چهارشنبه ۰۸:۰۰ الی ۰۹:۳۰';
-        _location = 'دانشکده کامپیوتر - تالار خوارزمی';
+        _location = 'دانشکده کامپیوتر - کلاس B7';
         _about = 'تحلیل پیچیدگی زمانی و مکانی، تکنیک‌های طراحی الگوریتم‌های کارآمد، برنامه‌نویسی پویا و الگوریتم‌های پیشرفته گراف.';
         _chapters = [
           'فصل ۱: تحلیل مجانبی و روابط بازگشتی (روش Master)',
