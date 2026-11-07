@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/student_profile_model.dart';
+import '../services/profile_api_service.dart';
 
 class EditProfileSheet extends StatefulWidget {
   final StudentProfile initialProfile;
@@ -12,6 +13,7 @@ class EditProfileSheet extends StatefulWidget {
 
 class _EditProfileSheetState extends State<EditProfileSheet> {
   final _formKey = GlobalKey<FormState>();
+  final _api = ProfileApiService();
 
   late TextEditingController _nameController;
   late TextEditingController _phoneController;
@@ -24,7 +26,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.initialProfile.fullName);
-    _phoneController = TextEditingController(text: widget.initialProfile.phoneNumber);
+    _phoneController = TextEditingController(text: widget.initialProfile.phone);
     _personalEmailController = TextEditingController(text: widget.initialProfile.personalEmail);
     _bioController = TextEditingController(text: widget.initialProfile.bio);
   }
@@ -38,28 +40,31 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
     super.dispose();
   }
 
-  void _saveChanges() async {
+  Future<void> _saveChanges() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isSaving = true);
-    await Future.delayed(const Duration(milliseconds: 600)); // شبیه‌سازی فراخوانی PUT /api/profile
 
-    final updated = StudentProfile(
+    final edited = widget.initialProfile.copyWith(
       fullName: _nameController.text.trim(),
-      studentNumber: widget.initialProfile.studentNumber,
-      major: widget.initialProfile.major,
-      universityEmail: widget.initialProfile.universityEmail,
-      entranceYear: widget.initialProfile.entranceYear,
-      gpa: widget.initialProfile.gpa,
-      academicStatus: widget.initialProfile.academicStatus,
-      phoneNumber: _phoneController.text.trim(),
+      phone: _phoneController.text.trim(),
       personalEmail: _personalEmailController.text.trim(),
       bio: _bioController.text.trim(),
-      registeredCourses: widget.initialProfile.registeredCourses,
     );
 
-    if (mounted) {
-      Navigator.of(context).pop(updated);
+    try {
+      final saved = await _api.updateProfile(edited);
+      if (!mounted) return;
+      Navigator.of(context).pop(saved);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isSaving = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceFirst('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -94,19 +99,23 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.close, color: Colors.grey),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: _isSaving ? null : () => Navigator.pop(context),
                     ),
                   ],
                 ),
                 const Divider(color: Colors.white12),
                 const SizedBox(height: 12),
 
-                // فیلد نام
+                // نام
                 TextFormField(
                   controller: _nameController,
                   style: const TextStyle(color: Colors.white, fontSize: 13),
                   decoration: _inputDecoration('نام و نام خانوادگی', Icons.person_outline),
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'نام نمی‌تواند خالی باشد' : null,
+                  validator: (v) {
+                    if (v == null || v.trim().isEmpty) return 'نام نمی‌تواند خالی باشد';
+                    if (v.trim().length > 80) return 'حداکثر ۸۰ کاراکتر';
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 14),
 
@@ -116,6 +125,14 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                   keyboardType: TextInputType.phone,
                   style: const TextStyle(color: Colors.white, fontSize: 13),
                   decoration: _inputDecoration('شماره تلفن همراه', Icons.phone_outlined),
+                  validator: (v) {
+                    final value = (v ?? '').trim();
+                    if (value.isEmpty) return null;
+                    if (!RegExp(r'^09\d{9}$').hasMatch(value)) {
+                      return 'شماره موبایل معتبر نیست (مثال: 09121234567)';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 14),
 
@@ -125,6 +142,14 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                   keyboardType: TextInputType.emailAddress,
                   style: const TextStyle(color: Colors.white, fontSize: 13),
                   decoration: _inputDecoration('ایمیل شخصی (غیردانشگاهی)', Icons.email_outlined),
+                  validator: (v) {
+                    final value = (v ?? '').trim();
+                    if (value.isEmpty) return null;
+                    if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value)) {
+                      return 'ایمیل معتبر نیست';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 14),
 
@@ -132,6 +157,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                 TextFormField(
                   controller: _bioController,
                   maxLines: 2,
+                  maxLength: 500,
                   style: const TextStyle(color: Colors.white, fontSize: 13),
                   decoration: _inputDecoration('درباره من', Icons.info_outline),
                 ),
@@ -148,7 +174,11 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: _isSaving
-                        ? const CircularProgressIndicator(color: Colors.white)
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                          )
                         : const Text('ذخیره تغییرات', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                   ),
                 ),
