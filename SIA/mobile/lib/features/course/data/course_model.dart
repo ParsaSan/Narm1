@@ -1,6 +1,6 @@
 class Course {
   final int id;
-  final String code;         // CE-401
+  final String code;         // کد درس مثل 110711306
   final String title;        // عنوان فارسی
   final String englishTitle;
   final String description;
@@ -21,18 +21,17 @@ class Course {
     this.isEnrolled = false,
   });
 
-  // برای وقتی که GET /api/courses آماده شد
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
-      id: json['id'],
-      code: json['code'],
-      title: json['title'],
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      code: json['code'] ?? '',
+      title: json['title'] ?? '',
       englishTitle: json['englishTitle'] ?? '',
       description: json['description'] ?? '',
-      units: json['units'],
-      type: json['type'],
-      instructor: json['instructor'],
-      isEnrolled: json['enrolled'] ?? false,
+      units: (json['units'] as num?)?.toInt() ?? 0,
+      type: json['type'] ?? 'تخصصی',
+      instructor: json['instructor'] ?? '',
+      isEnrolled: json['enrolled'] ?? json['isEnrolled'] ?? false,
     );
   }
 }

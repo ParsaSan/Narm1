@@ -1,5 +1,7 @@
 package ir.pgu.profile.service;
 
+import ir.pgu.course.repository.CourseRepository;
+import ir.pgu.course.model.Course;
 import ir.pgu.profile.dto.EnrolledCourseDto;
 import ir.pgu.profile.dto.ProfileResponse;
 import ir.pgu.profile.dto.UpdateProfileRequest;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProfileService {
@@ -21,11 +24,14 @@ public class ProfileService {
     private static final Long CURRENT_STUDENT_ID = 1L;
 
     private final StudentProfileRepository studentRepository;
-    private final EnrolledCourseRepository courseRepository;
+    private final EnrolledCourseRepository enrolledRepository;
+    private final CourseRepository courseRepository;
 
     public ProfileService(StudentProfileRepository studentRepository,
-                          EnrolledCourseRepository courseRepository) {
+                          EnrolledCourseRepository enrolledRepository,
+                          CourseRepository courseRepository) {
         this.studentRepository = studentRepository;
+        this.enrolledRepository = enrolledRepository;
         this.courseRepository = courseRepository;
     }
 
@@ -52,9 +58,10 @@ public class ProfileService {
     }
 
     private ProfileResponse buildResponse(StudentProfile s) {
-        List<EnrolledCourseDto> courses = courseRepository.findByStudentId(s.getId())
+        List<EnrolledCourseDto> courses = enrolledRepository.findByStudentId(s.getId())
                 .stream()
                 .map(this::toDto)
+                .filter(Objects::nonNull)
                 .toList();
 
         return new ProfileResponse(
@@ -64,9 +71,15 @@ public class ProfileService {
                 courses.size(), courses);
     }
 
-    private EnrolledCourseDto toDto(EnrolledCourse c) {
+    // اسم، مدرس و واحد از جدول courses خونده می‌شه
+    private EnrolledCourseDto toDto(EnrolledCourse e) {
+        Course c = courseRepository.findById(e.getCourseId()).orElse(null);
+        if (c == null) return null;
         return new EnrolledCourseDto(
-                c.getCourseId(), c.getTitle(), c.getInstructorName(),
-                c.getUnits(), c.getMembershipStatus());
+                c.getId(),
+                c.getTitle(),
+                c.getInstructor(),
+                c.getUnits() == null ? 0 : c.getUnits(),
+                e.getMembershipStatus());
     }
 }
