@@ -1,20 +1,32 @@
-// مدل آمار اولیه
+// مدل آمار تحصیلی دانشجو
 class DashboardStatsModel {
-  final int totalCourses;
-  final int totalFiles;
-  final int totalStudents;
+  final int currentTerm;
+  final int passedUnits;
+  final int currentTermUnits;
+  final int currentTermCoursesCount;
+  final String gpaTrend;
+  final List<double> pastTermGpas;
 
   DashboardStatsModel({
-    required this.totalCourses,
-    required this.totalFiles,
-    required this.totalStudents,
+    required this.currentTerm,
+    required this.passedUnits,
+    required this.currentTermUnits,
+    required this.currentTermCoursesCount,
+    required this.gpaTrend,
+    required this.pastTermGpas,
   });
 
   factory DashboardStatsModel.fromJson(Map<String, dynamic> json) {
+    var gpasFromJson = json['pastTermGpas'] as List? ?? [];
+    List<double> gpasList = gpasFromJson.map((e) => (e as num).toDouble()).toList();
+
     return DashboardStatsModel(
-      totalCourses: json['totalCourses'] ?? 0,
-      totalFiles: json['totalFiles'] ?? 0,
-      totalStudents: json['totalStudents'] ?? 0,
+      currentTerm: json['currentTerm'] ?? 1,
+      passedUnits: json['passedUnits'] ?? 0,
+      currentTermUnits: json['currentTermUnits'] ?? 0,
+      currentTermCoursesCount: json['currentTermCoursesCount'] ?? 0,
+      gpaTrend: json['gpaTrend'] ?? 'ثابت',
+      pastTermGpas: gpasList,
     );
   }
 }

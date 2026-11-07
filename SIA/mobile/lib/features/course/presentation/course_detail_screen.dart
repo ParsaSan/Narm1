@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/course_detail_api_service.dart';
+import '../../dashboard/dashboard_api_service.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final int courseId;
@@ -32,6 +33,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
 
   @override
   void initState() {
+    DashboardApiService().recordVisit(widget.courseId, widget.title, widget.instructor);
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
     _loadCourse();
