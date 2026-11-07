@@ -1,4 +1,4 @@
-package ir.pgu.profile.config;
+package ir.pgu.config;
 
 import ir.pgu.profile.model.EnrolledCourse;
 import ir.pgu.profile.model.StudentProfile;

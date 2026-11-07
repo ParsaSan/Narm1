@@ -3,10 +3,10 @@ ir\pgu\profile\dto\EnrolledCourseDto.class
 ir\pgu\profile\model\StudentProfile.class
 ir\pgu\dashboard\repository\RecentCourseRepository.class
 ir\pgu\SiaApplication.class
+ir\pgu\config\ProfileDataInitializer.class
 ir\pgu\profile\service\ProfileService.class
 ir\pgu\dashboard\model\DashboardStats.class
 ir\pgu\dashboard\service\DashboardService.class
-ir\pgu\profile\config\ProfileDataInitializer.class
 ir\pgu\profile\model\EnrolledCourse.class
 ir\pgu\dashboard\model\Banner.class
 ir\pgu\dashboard\model\RecentCourse.class
