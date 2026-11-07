@@ -38,4 +38,20 @@ class DashboardApiService {
       throw Exception('خطا در دریافت دروس اخیر از سرور');
     }
   }
+
+  // ۴. ارسال کلیک و بازدید درس به سرور
+  Future<void> recordVisit(int courseId, String title, String instructor) async {
+    try {
+      await http.post(
+        Uri.parse('$baseUrl/recent-courses/visit'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: json.encode({
+          'id': courseId,
+          'title': title,
+          'instructor': instructor,
+        }),
+      );
+    } catch (_) {}
+  }
+
 }
