@@ -5,6 +5,7 @@ E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\model\RecentCourse.java
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\repository\BannerRepository.java
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\repository\RecentCourseRepository.java
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\service\DashboardService.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\config\ProfileDataInitializer.java
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\controller\ProfileController.java
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\dto\EnrolledCourseDto.java
 E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\dto\ProfileResponse.java
