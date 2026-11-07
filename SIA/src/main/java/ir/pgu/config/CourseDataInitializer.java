@@ -1,3 +1,4 @@
+
 package ir.pgu.config;
 
 import ir.pgu.course.model.Course;
@@ -22,12 +23,16 @@ public class CourseDataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+
         // ابتدا جداول وابسته (فرزند) را پاک می‌کنیم تا خطای Foreign Key رخ ندهد
         enrolledCourseRepository.deleteAll();
         courseDetailRepository.deleteAll();
+
+        // برای اینکه تمام ۱۴ درس جدید تمیز در دیتابیس جایگزین شوند
         courseRepository.deleteAll();
 
         List<Course> defaultCourses = List.of(
+
             // ۱. مهندسی نرم‌افزار ۱
             new Course(
                 null, "110711306", "مهندسی نرم‌افزار ۱", "Software Engineering I",
@@ -128,6 +133,7 @@ public class CourseDataInitializer implements CommandLineRunner {
         );
 
         courseRepository.saveAll(defaultCourses);
+
         System.out.println(">>> تمام جداول ریست شدند و ۱۴ درس با موفقیت بارگذاری شدند.");
     }
 }

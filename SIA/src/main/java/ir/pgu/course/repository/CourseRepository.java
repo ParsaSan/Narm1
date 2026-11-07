@@ -1,9 +1,9 @@
+
 package ir.pgu.course.repository;
 
+import ir.pgu.course.model.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import ir.pgu.course.model.Course;
 
 import java.util.List;
 
