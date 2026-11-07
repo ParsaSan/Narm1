@@ -1,8 +1,18 @@
-C:\Users\persian\IdeaProjects\Narm1\SIA\src\main\java\ir\pgu\dashboard\controller\DashboardController.java
-C:\Users\persian\IdeaProjects\Narm1\SIA\src\main\java\ir\pgu\dashboard\model\Banner.java
-C:\Users\persian\IdeaProjects\Narm1\SIA\src\main\java\ir\pgu\dashboard\model\DashboardStats.java
-C:\Users\persian\IdeaProjects\Narm1\SIA\src\main\java\ir\pgu\dashboard\model\RecentCourse.java
-C:\Users\persian\IdeaProjects\Narm1\SIA\src\main\java\ir\pgu\dashboard\repository\BannerRepository.java
-C:\Users\persian\IdeaProjects\Narm1\SIA\src\main\java\ir\pgu\dashboard\repository\RecentCourseRepository.java
-C:\Users\persian\IdeaProjects\Narm1\SIA\src\main\java\ir\pgu\dashboard\service\DashboardService.java
-C:\Users\persian\IdeaProjects\Narm1\SIA\src\main\java\ir\pgu\SiaApplication.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\config\ProfileDataInitializer.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\controller\DashboardController.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\model\Banner.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\model\DashboardStats.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\model\RecentCourse.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\repository\BannerRepository.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\repository\RecentCourseRepository.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\dashboard\service\DashboardService.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\controller\ProfileController.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\dto\EnrolledCourseDto.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\dto\ProfileResponse.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\dto\UpdateProfileRequest.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\model\EnrolledCourse.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\model\StudentProfile.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\repository\EnrolledCourseRepository.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\repository\StudentProfileRepository.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\profile\service\ProfileService.java
+E:\Narm 1\Projects\SIA\src\main\java\ir\pgu\SiaApplication.java
