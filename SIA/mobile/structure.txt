@@ -1,0 +1,194 @@
+﻿Folder PATH listing for volume Acer
+Volume serial number is EA95-EDEB
+C:\USERS\HABIB\DOCUMENTS\NARM1\SIA\MOBILE\LIB
+|   main.dart
+|   
++---core
+|       test4.py
+|       
++---features
+|   +---auth
+|   |       test5.py
+|   |       
+|   +---course
+|   |   +---data
+|   |   |       course_api_service.dart
+|   |   |       course_detail_api_service.dart
+|   |   |       course_model.dart
+|   |   |       
+|   |   \---presentation
+|   |       |   course_detail_screen.dart
+|   |       |   course_list_screen.dart
+|   |       |   
+|   |       \---widgets
+|   |               course_card.dart
+|   |               
+|   +---dashboard
+|   |       dashboard_api_service.dart
+|   |       dashboard_models.dart
+|   |       dashboard_screen.dart
+|   |       test7.py
+|   |       
+|   +---profile
+|   |   |   test8.py
+|   |   |   
+|   |   +---models
+|   |   |       student_profile_model.dart
+|   |   |       
+|   |   +---screens
+|   |   |       student_profile_screen.dart
+|   |   |       
+|   |   +---services
+|   |   |       profile_api_service.dart
+|   |   |       
+|   |   \---widgets
+|   |           edit_profile_sheet.dart
+|   |           
+|   \---user
+|           test9.py
+|           
+\---shared
+        test10.py
+        
+
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé A new version of Flutter is available!                  Γöé
+Γöé                                                         Γöé
+Γöé To update to the latest version, run "flutter upgrade". Γöé
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+Flutter 3.35.4 ΓÇó channel stable ΓÇó https://github.com/flutter/flutter.git
+Framework ΓÇó revision d693b4b9db (1 year, 2 months ago) ΓÇó 2025-09-16 14:27:41 +0000
+Engine ΓÇó hash feee8ee8fb8b975dd9990f86d3bda11e6e75faf3 (revision c298091351) (13 months ago) ΓÇó 2025-09-15 14:04:24.000Z
+Tools ΓÇó Dart 3.9.2 ΓÇó DevTools 2.48.0
+name: mobile
+description: "SIA Mobile Application"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.0
+
+dev_dependencies:
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+Folder PATH listing for volume Acer
+Volume serial number is EA95-EDEB
+C:\USERS\HABIB\DOCUMENTS\NARM1\SIA\SRC
++---main
+|   +---java
+|   |   \---ir
+|   |       \---pgu
+|   |           |   SiaApplication.java
+|   |           |   
+|   |           +---auth
+|   |           |       test12.py
+|   |           |       
+|   |           +---common
+|   |           |       test13.py
+|   |           |       
+|   |           +---config
+|   |           |       CourseDataInitializer.java
+|   |           |       CourseDetailInitializer.java
+|   |           |       ProfileDataInitializer.java
+|   |           |       test14.py
+|   |           |       
+|   |           +---course
+|   |           |   +---controller
+|   |           |   |       CourseController.java
+|   |           |   |       CourseDetailController.java
+|   |           |   |       
+|   |           |   +---dto
+|   |           |   |       CourseDetailResponse.java
+|   |           |   |       
+|   |           |   +---model
+|   |           |   |       Course.java
+|   |           |   |       CourseDetail.java
+|   |           |   |       
+|   |           |   +---repository
+|   |           |   |       CourseDetailRepository.java
+|   |           |   |       CourseRepository.java
+|   |           |   |       
+|   |           |   \---service
+|   |           |           CourseService.java
+|   |           |           
+|   |           +---dashboard
+|   |           |   |   test16.py
+|   |           |   |   
+|   |           |   +---controller
+|   |           |   |       DashboardController.java
+|   |           |   |       
+|   |           |   +---model
+|   |           |   |       Banner.java
+|   |           |   |       DashboardStats.java
+|   |           |   |       RecentCourse.java
+|   |           |   |       
+|   |           |   +---repository
+|   |           |   |       BannerRepository.java
+|   |           |   |       RecentCourseRepository.java
+|   |           |   |       
+|   |           |   \---service
+|   |           |           DashboardService.java
+|   |           |           
+|   |           +---profile
+|   |           |   |   test17.py
+|   |           |   |   
+|   |           |   +---controller
+|   |           |   |       ProfileController.java
+|   |           |   |       
+|   |           |   +---dto
+|   |           |   |       EnrolledCourseDto.java
+|   |           |   |       ProfileResponse.java
+|   |           |   |       UpdateProfileRequest.java
+|   |           |   |       
+|   |           |   +---model
+|   |           |   |       EnrolledCourse.java
+|   |           |   |       StudentProfile.java
+|   |           |   |       
+|   |           |   +---repository
+|   |           |   |       EnrolledCourseRepository.java
+|   |           |   |       StudentProfileRepository.java
+|   |           |   |       
+|   |           |   \---service
+|   |           |           ProfileService.java
+|   |           |           
+|   |           \---user
+|   |               |   test18.py
+|   |               |   
+|   |               +---config
+|   |               |       PasswordConfig.java
+|   |               |       
+|   |               +---controller
+|   |               |       AuthController.java
+|   |               |       
+|   |               +---dto
+|   |               |       AuthResponse.java
+|   |               |       LoginRequest.java
+|   |               |       RegisterRequest.java
+|   |               |       
+|   |               +---model
+|   |               |       User.java
+|   |               |       
+|   |               +---repository
+|   |               |       UserRepository.java
+|   |               |       
+|   |               \---service
+|   |                       AuthService.java
+|   |                       
+|   \---resources
+|       |   application.properties
+|       |   
+|       \---db
+|           \---migration
+|                   test19.py
+|                   
+\---test
+    \---java
+            test20.py
+            

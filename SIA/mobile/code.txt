@@ -1,0 +1,1553 @@
+﻿===== lib\main.dart =====
+import 'package:flutter/material.dart';
+
+// ایمپورت صفحه پروفایل (مطابق با ساختار پوشه features/profile)
+import 'features/dashboard/dashboard_screen.dart';
+import 'features/profile/screens/student_profile_screen.dart';
+// ایمپورت صفحه کاتالوگ دوره‌ها
+
+void main() {
+  runApp(const SiamApp());
+}
+
+class SiamApp extends StatelessWidget {
+  const SiamApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'سامانه دانشگاهی SIA',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF070D1E),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF1D4ED8),
+          surface: Color(0xFF0E1B38),
+        ),
+        useMaterial3: true,
+      ),
+      // برای نمایش مستقیم صفحه پروفایل دانشجو:
+      home: const DashboardScreen(),
+
+      // اگر خواستید لیست دوره‌ها را ببینید، خط بالا را کامنت کنید و خط زیر را فعال کنید:
+      // home: const CourseListScreen(),
+    );
+  }
+}
+===== lib\features\dashboard\dashboard_api_service.dart =====
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'dashboard_models.dart';
+
+class DashboardApiService {
+  // آدرس پایه سرور بک‌اند جاوا
+  static const String baseUrl = 'http://localhost:8080/api/dashboard';
+
+  // ۱. دریافت آمار اولیه سامانه
+  Future<DashboardStatsModel> fetchStats() async {
+    final response = await http.get(Uri.parse('$baseUrl/stats'));
+    if (response.statusCode == 200) {
+      final data = json.decode(utf8.decode(response.bodyBytes));
+      return DashboardStatsModel.fromJson(data);
+    } else {
+      throw Exception('خطا در دریافت آمار از سرور');
+    }
+  }
+
+  // ۲. دریافت بنرها
+  Future<List<BannerModel>> fetchBanners() async {
+    final response = await http.get(Uri.parse('$baseUrl/banners'));
+    if (response.statusCode == 200) {
+      final List data = json.decode(utf8.decode(response.bodyBytes));
+      return data.map((item) => BannerModel.fromJson(item)).toList();
+    } else {
+      throw Exception('خطا در دریافت بنرها از سرور');
+    }
+  }
+
+  // ۳. دریافت ۳ درس اخیراً بازدیدشده
+  Future<List<RecentCourseModel>> fetchRecentCourses() async {
+    final response = await http.get(Uri.parse('$baseUrl/recent-courses'));
+    if (response.statusCode == 200) {
+      final List data = json.decode(utf8.decode(response.bodyBytes));
+      return data.map((item) => RecentCourseModel.fromJson(item)).toList();
+    } else {
+      throw Exception('خطا در دریافت دروس اخیر از سرور');
+    }
+  }
+
+  // ۴. ارسال کلیک و بازدید درس به سرور
+  Future<void> recordVisit(int courseId, String title, String instructor) async {
+    try {
+      await http.post(
+        Uri.parse('$baseUrl/recent-courses/visit'),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: json.encode({
+          'id': courseId,
+          'title': title,
+          'instructor': instructor,
+        }),
+      );
+    } catch (_) {}
+  }
+
+}
+===== lib\features\dashboard\dashboard_screen.dart =====
+import 'package:flutter/material.dart';
+import '../course/presentation/course_detail_screen.dart';
+import '../course/presentation/course_list_screen.dart';
+import '../profile/screens/student_profile_screen.dart';
+import 'dashboard_models.dart';
+import 'dashboard_api_service.dart';
+
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({Key? key}) : super(key: key);
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  final DashboardApiService _apiService = DashboardApiService();
+
+  bool _isLoading = true;
+  String? _errorMessage;
+
+  DashboardStatsModel? _stats;
+  List<BannerModel> _banners = [];
+  List<RecentCourseModel> _recentCourses = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDashboardData();
+  }
+
+  Future<void> _loadDashboardData() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final stats = await _apiService.fetchStats();
+      final banners = await _apiService.fetchBanners();
+      final recentCourses = await _apiService.fetchRecentCourses();
+
+      setState(() {
+        _stats = stats;
+        _banners = banners;
+        _recentCourses = recentCourses;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'امکان اتصال به سرور وجود ندارد. آیا سرور روشن است؟';
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('دستیار هوشمند دانشجویی'),
+          centerTitle: true,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.person_outline),
+              tooltip: 'پروفایل دانشجو',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const StudentProfileScreen(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _errorMessage != null
+            ? _buildErrorView()
+            : RefreshIndicator(
+          onRefresh: _loadDashboardData,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildWelcomeHeader(),
+                const SizedBox(height: 20),
+                _buildStatsSection(),
+                const SizedBox(height: 25),
+                _buildBannersSection(),
+                const SizedBox(height: 25),
+                _buildRecentCoursesSection(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWelcomeHeader() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'سلام، دانشجو عزیز! 👋',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 6),
+          Text(
+            'به سامانه یکپارچه دروس و منابع خوش آمدید.',
+            style: TextStyle(fontSize: 13, color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatsSection() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildAdvancedStatCard(
+            title: 'ترم ${_stats?.currentTerm ?? 5}',
+            subtitle: '${_stats?.passedUnits ?? 0} واحد گذرانده',
+            icon: Icons.calendar_today,
+            tag: 'ترم جاری',
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: _buildAdvancedStatCard(
+            title: '${_stats?.currentTermUnits ?? 0} واحد',
+            subtitle: '${_stats?.currentTermCoursesCount ?? 0} درس انتخابی',
+            icon: Icons.assignment_outlined,
+            tag: 'واحدهای ترم',
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: InkWell(
+            onTap: _showGpaChartDialog,
+            borderRadius: BorderRadius.circular(12),
+            child: _buildAdvancedStatCard(
+              title: _stats?.gpaTrend ?? 'صعودی',
+              subtitle: 'مشاهده نمودار معدل 📊',
+              icon: Icons.trending_up,
+              tag: 'عملکرد تحصیلی',
+              isClickable: true,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAdvancedStatCard({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required String tag,
+    bool isClickable = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isClickable ? Colors.blue.withOpacity(0.5) : Colors.white10,
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: Theme.of(context).colorScheme.primary, size: 18),
+              const SizedBox(width: 4),
+              Text(
+                tag,
+                style: const TextStyle(fontSize: 11, color: Colors.grey),
+                maxLines: 1,
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            subtitle,
+            style: TextStyle(
+              fontSize: 10,
+              color: isClickable ? Colors.lightBlueAccent : Colors.white70,
+              fontWeight: isClickable ? FontWeight.bold : FontWeight.normal,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showGpaChartDialog() {
+    final gpas = _stats?.pastTermGpas ?? [15.5, 16.2, 16.8, 17.1, 17.75];
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: AlertDialog(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: const Row(
+              children: [
+                Icon(Icons.insights, color: Colors.blueAccent),
+                SizedBox(width: 8),
+                Text('نمودار روند معدل ترم‌ها', style: TextStyle(fontSize: 16)),
+              ],
+            ),
+            content: SizedBox(
+              width: 320,
+              height: 200,
+              child: Column(
+                children: [
+                  const Text(
+                    'روند پیشرفت معدل در ترم‌های گذشته:',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 20),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: List.generate(gpas.length, (index) {
+                        final gpa = gpas[index];
+                        final barHeight = (gpa / 20.0) * 110.0;
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              gpa.toString(),
+                              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 4),
+                            Container(
+                              width: 24,
+                              height: barHeight,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Colors.blueAccent, Colors.cyanAccent],
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                ),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'ترم ${index + 1}',
+                              style: const TextStyle(fontSize: 10, color: Colors.grey),
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('بستن'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBannersSection() {
+    if (_banners.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'اطلاعیه‌ها و بنرها',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 130,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _banners.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (context, index) {
+              final banner = _banners[index];
+              return Container(
+                width: 260,
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                      Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                    ],
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      banner.title,
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      banner.subtitle,
+                      style: const TextStyle(fontSize: 12, color: Colors.white70),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRecentCoursesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'آخرین دروس مشاهده‌شده',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            // ۱. با زدن این دکمه و برگشتن، داشبورد خودکار رفرش می‌شود
+            TextButton.icon(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CourseListScreen(),
+                  ),
+                );
+                _loadDashboardData();
+              },
+              icon: const Icon(Icons.list, size: 16),
+              label: const Text('همه دروس', style: TextStyle(fontSize: 12)),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        if (_recentCourses.isEmpty)
+          const Text('هنوز درسی مشاهده نشده است.', style: TextStyle(color: Colors.grey))
+        else
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _recentCourses.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 10),
+            itemBuilder: (context, index) {
+              final course = _recentCourses[index];
+              return InkWell(
+                borderRadius: BorderRadius.circular(12),
+                // ۲. با کلیک روی هر درس و برگشتن، داشبورد خودکار رفرش می‌شود
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CourseDetailScreen(
+                        courseId: course.id,
+                        title: course.title,
+                        instructor: course.instructor,
+                      ),
+                    ),
+                  );
+                  _loadDashboardData();
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                        child: Icon(Icons.school, color: Theme.of(context).colorScheme.primary),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              course.title,
+                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'استاد: ${course.instructor}',
+                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+      ],
+    );
+  }
+
+  Widget _buildErrorView() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.cloud_off, size: 60, color: Colors.redAccent),
+            const SizedBox(height: 16),
+            Text(
+              _errorMessage ?? 'خطایی رخ داد',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 14),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: _loadDashboardData,
+              icon: const Icon(Icons.refresh),
+              label: const Text('تلاش مجدد'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+===== lib\features\course\presentation\course_list_screen.dart =====
+import 'package:flutter/material.dart';
+import '../data/course_model.dart';
+import '../data/course_api_service.dart';
+import 'widgets/course_card.dart';
+import 'course_detail_screen.dart';
+
+class CourseListScreen extends StatefulWidget {
+  const CourseListScreen({super.key});
+
+  @override
+  State<CourseListScreen> createState() => _CourseListScreenState();
+}
+
+class _CourseListScreenState extends State<CourseListScreen> {
+  static const _filters = ['همه', 'تخصصی', 'پایه', 'عمومی'];
+
+  String _selectedFilter = 'همه';
+  String _query = '';
+
+  // لیست دروس که از سرور دریافت می‌شود
+  List<Course> _allCourses = [];
+  bool _isLoading = true;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCoursesFromServer();
+  }
+
+  // دریافت اطلاعات زنده از بک‌اند اسپرینگ‌بوت
+  Future<void> _fetchCoursesFromServer() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final courses = await CourseApiService.fetchCourses();
+      setState(() {
+        _allCourses = courses;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'خطا در برقراری ارتباط با سرور. آیا بک‌اند روشن است؟';
+        _isLoading = false;
+      });
+    }
+  }
+
+  // یکسان‌سازی حروف عربی و فارسی برای جستجوی دقیق‌تر
+  String _norm(String s) => s
+      .replaceAll('ي', 'ی')
+      .replaceAll('ك', 'ک')
+      .toLowerCase()
+      .trim();
+
+  List<Course> get _filtered {
+    final q = _norm(_query);
+    return _allCourses.where((c) {
+      final okType = _selectedFilter == 'همه' || c.type == _selectedFilter;
+      final okSearch = q.isEmpty ||
+          _norm(c.title).contains(q) ||
+          _norm(c.englishTitle).contains(q) ||
+          _norm(c.instructor).contains(q) ||
+          _norm(c.code).contains(q);
+      return okType && okSearch;
+    }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final courses = _filtered;
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'فهرست دروس دانشگاهی',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: 'بروزرسانی از سرور',
+              onPressed: _fetchCoursesFromServer,
+            ),
+          ],
+        ),
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 700),
+            child: _isLoading
+                // حالت در حال بارگذاری از سرور
+                ? const Center(child: CircularProgressIndicator())
+                : _errorMessage != null
+                    // حالت بروز خطا در اتصال به بک‌اند
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.cloud_off, size: 64, color: Colors.grey),
+                            const SizedBox(height: 16),
+                            Text(_errorMessage!, style: const TextStyle(fontSize: 14)),
+                            const SizedBox(height: 12),
+                            ElevatedButton.icon(
+                              onPressed: _fetchCoursesFromServer,
+                              icon: const Icon(Icons.refresh),
+                              label: const Text('تلاش مجدد'),
+                            ),
+                          ],
+                        ),
+                      )
+                    // نمایش لیست بعد از دریافت موفقیت‌آمیز
+                    : RefreshIndicator(
+                        onRefresh: _fetchCoursesFromServer,
+                        child: Column(
+                          children: [
+                            // کادر جستجو
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                              child: TextField(
+                                onChanged: (v) => setState(() => _query = v),
+                                decoration: InputDecoration(
+                                  hintText: 'جستجوی نام درس، استاد یا کد درس...',
+                                  hintStyle: const TextStyle(fontSize: 13),
+                                  suffixIcon: const Icon(Icons.search),
+                                  filled: true,
+                                  fillColor: cs.surfaceContainer,
+                                  contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        color: cs.outlineVariant.withOpacity(0.5)),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        color: cs.outlineVariant.withOpacity(0.5)),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            // چیپ‌های فیلتر
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Row(
+                                children: _filters.map((f) {
+                                  return Padding(
+                                    padding: const EdgeInsetsDirectional.only(end: 8),
+                                    child: ChoiceChip(
+                                      label: Text(f),
+                                      selected: _selectedFilter == f,
+                                      showCheckmark: false,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      onSelected: (_) =>
+                                          setState(() => _selectedFilter = f),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+
+                            // تعداد نتایج
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                              child: Align(
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  'تعداد دروس دریافتی از سرور: ${courses.length} درس',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: cs.onSurface.withOpacity(0.6),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            // لیست دروس
+                            Expanded(
+                              child: courses.isEmpty
+                                  ? const Center(child: Text('درسی پیدا نشد'))
+                                  : ListView.separated(
+                                      padding: const EdgeInsets.all(16),
+                                      itemCount: courses.length,
+                                      separatorBuilder: (_, __) =>
+                                          const SizedBox(height: 12),
+                                      itemBuilder: (context, i) {
+                                        final course = courses[i];
+                                        return CourseCard(
+                                          course: course,
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => CourseDetailScreen(
+                                                courseId: course.id,
+                                                title: course.title,
+                                                instructor: course.instructor,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                            ),
+                          ],
+                        ),
+                      ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+===== lib\features\profile\screens\student_profile_screen.dart =====
+import 'package:flutter/material.dart';
+import '../models/student_profile_model.dart';
+import '../services/profile_api_service.dart';
+import '../widgets/edit_profile_sheet.dart';
+import '../../course/presentation/course_detail_screen.dart';
+
+class StudentProfileScreen extends StatefulWidget {
+  const StudentProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  State<StudentProfileScreen> createState() => _StudentProfileScreenState();
+}
+
+class _StudentProfileScreenState extends State<StudentProfileScreen> {
+  static const Color bgColor = Color(0xFF070D1E);
+  static const Color cardColor = Color(0xFF0E1B38);
+  static const Color primaryBlue = Color(0xFF1D4ED8);
+  static const Color avatarBg = Color(0xFF6EA8FE);
+  static const Color officialTagBg = Color(0xFF162544);
+
+  final _api = ProfileApiService();
+
+  StudentProfile? profile;
+  bool isLoading = true;
+  String? error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    setState(() {
+      isLoading = true;
+      error = null;
+    });
+    try {
+      final p = await _api.getProfile();
+      if (!mounted) return;
+      setState(() {
+        profile = p;
+        isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        error = e.toString().replaceFirst('Exception: ', '');
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _openEditProfileDialog() async {
+    final current = profile;
+    if (current == null) return;
+
+    final updatedProfile = await showModalBottomSheet<StudentProfile>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => EditProfileSheet(initialProfile: current),
+    );
+
+    if (!mounted) return;
+
+    if (updatedProfile != null) {
+      setState(() {
+        profile = updatedProfile;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('مشخصات دانشجویی با موفقیت ذخیره شد.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor: bgColor,
+        appBar: AppBar(
+          backgroundColor: bgColor,
+          elevation: 0,
+          title: Row(
+            children: [
+              const Text('پروفایل تحصیلی دانشجو', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(color: const Color(0xFF1E3A8A), borderRadius: BorderRadius.circular(12)),
+                child: const Text('اسپرینت ۱', style: TextStyle(fontSize: 10, color: Color(0xFF93C5FD), fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+        ),
+        body: _buildBody(),
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final p = profile;
+    if (error != null || p == null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.wifi_off_rounded, color: Colors.white54, size: 40),
+              const SizedBox(height: 12),
+              Text(
+                error ?? 'خطای نامشخص',
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white70, fontSize: 13),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: _loadProfile,
+                icon: const Icon(Icons.refresh_rounded, size: 18),
+                label: const Text('تلاش مجدد'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryBlue,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: _loadProfile,
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(16),
+        children: [
+          _buildHeaderCard(p),
+          const SizedBox(height: 20),
+          const Text('اطلاعات رسمی آموزشی (سامانه آموزش دانشگاه)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white70)),
+          const SizedBox(height: 10),
+          _buildOfficialInfoCard(p),
+          const SizedBox(height: 24),
+          Text('دروس ثبت‌شده دانشجو (${p.registeredCourses.length} درس)', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white70)),
+          const SizedBox(height: 10),
+          ...p.registeredCourses.map((c) => _buildCourseCard(c)),
+          const SizedBox(height: 20),
+          OutlinedButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.logout_rounded, size: 18, color: Colors.grey),
+            label: const Text('خروج از حساب کاربری', style: TextStyle(color: Colors.grey, fontSize: 13)),
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: Color(0xFF1F2937)),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
+          const SizedBox(height: 40),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeaderCard(StudentProfile p) {
+    final name = p.fullName.trim();
+    final firstLetter = name.isNotEmpty ? name.substring(0, 1) : 'س';
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(0.06)),
+      ),
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 36,
+            backgroundColor: avatarBg,
+            child: Text(firstLetter, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black87)),
+          ),
+          const SizedBox(height: 10),
+          Text(p.fullName, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white)),
+          if (p.bio.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(
+              p.bio,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12, color: Colors.white60, height: 1.5),
+            ),
+          ],
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildBadge(
+                p.studentType.isNotEmpty ? p.studentType : 'دانشجوی رسمی',
+                const Color(0xFF065F46),
+                const Color(0xFF34D399),
+              ),
+              const SizedBox(width: 8),
+              _buildBadge('نسخه نمایشی اسپرینت ۱', const Color(0xFF1E3A8A), const Color(0xFF93C5FD)),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            height: 44,
+            child: ElevatedButton.icon(
+              onPressed: _openEditProfileDialog,
+              icon: const Icon(Icons.edit_outlined, size: 18),
+              label: const Text('ویرایش مشخصات دانشجویی', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryBlue,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOfficialInfoCard(StudentProfile p) {
+    return Container(
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.06)),
+      ),
+      child: Column(
+        children: [
+          _buildInfoRow('شماره دانشجویی', p.studentNumber, Icons.badge_outlined, hasOfficialBadge: true),
+          const Divider(color: Colors.white12, height: 1),
+          _buildInfoRow('رشته و گرایش', p.major, Icons.school_outlined),
+          const Divider(color: Colors.white12, height: 1),
+          _buildInfoRow('ایمیل دانشگاهی', p.universityEmail, Icons.mail_outline),
+          const Divider(color: Colors.white12, height: 1),
+          _buildInfoRow('سال ورود', p.entryYear.toString(), Icons.calendar_today_outlined),
+          const Divider(color: Colors.white12, height: 1),
+          _buildInfoRow('معدل کل رسمی', p.gpa.toStringAsFixed(2), Icons.star_outline_rounded, hasOfficialBadge: true),
+          const Divider(color: Colors.white12, height: 1),
+          _buildInfoRow('وضعیت تحصیلی', p.educationStatus, Icons.verified_user_outlined, hasOfficialBadge: true),
+          const Divider(color: Colors.white12, height: 1),
+          _buildInfoRow('شماره همراه', p.phone.isEmpty ? '—' : p.phone, Icons.phone_outlined),
+          const Divider(color: Colors.white12, height: 1),
+          _buildInfoRow('ایمیل شخصی', p.personalEmail.isEmpty ? '—' : p.personalEmail, Icons.alternate_email_rounded),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value, IconData icon, {bool hasOfficialBadge = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                if (hasOfficialBadge)
+                  Container(
+                    margin: const EdgeInsets.only(left: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(color: officialTagBg, borderRadius: BorderRadius.circular(4)),
+                    child: const Text('رسمی', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                  ),
+                Expanded(
+                  child: Text(value, style: const TextStyle(fontSize: 12, color: Colors.white), overflow: TextOverflow.ellipsis),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(label, style: const TextStyle(fontSize: 12, color: Colors.white70)),
+              const SizedBox(width: 8),
+              Icon(icon, size: 18, color: Colors.blue.shade400),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCourseCard(RegisteredCourse course) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withOpacity(0.04)),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CourseDetailScreen(
+                  courseId: course.id,
+                  title: course.title,
+                  instructor: course.instructor,
+                ),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(color: const Color(0xFF064E3B), borderRadius: BorderRadius.circular(6)),
+                  child: Text(course.status, style: const TextStyle(fontSize: 10, color: Color(0xFF6EE7B7), fontWeight: FontWeight.bold)),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(course.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white)),
+                    const SizedBox(height: 2),
+                    Text('${course.instructor} • ${course.units} واحد', style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBadge(String text, Color bg, Color fg) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
+      child: Text(text, style: TextStyle(fontSize: 10, color: fg, fontWeight: FontWeight.w600)),
+    );
+  }
+}
+===== lib\features\profile\services\profile_api_service.dart =====
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../models/student_profile_model.dart';
+
+class ProfileApiService {
+  // اندروید امولاتور: 10.0.2.2
+  // iOS سیمولاتور / وب / دسکتاپ: localhost
+  // گوشی واقعی: IP کامپیوتر، مثلا 192.168.1.5
+  static const String baseUrl = 'http://localhost:8080/api/profile';
+
+  static const Duration _timeout = Duration(seconds: 10);
+
+  Future<StudentProfile> getProfile() async {
+    try {
+      final response = await http.get(Uri.parse(baseUrl)).timeout(_timeout);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(utf8.decode(response.bodyBytes));
+        return StudentProfile.fromJson(data as Map<String, dynamic>);
+      }
+      throw Exception('خطا در دریافت پروفایل (کد ${response.statusCode})');
+    } on Exception catch (e) {
+      throw Exception(_cleanMessage(e, 'اتصال به سرور برقرار نشد'));
+    }
+  }
+
+  Future<StudentProfile> updateProfile(StudentProfile profile) async {
+    try {
+      final response = await http
+          .put(
+            Uri.parse(baseUrl),
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            body: jsonEncode(profile.toUpdateJson()),
+          )
+          .timeout(_timeout);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(utf8.decode(response.bodyBytes));
+        return StudentProfile.fromJson(data as Map<String, dynamic>);
+      }
+      if (response.statusCode == 400) {
+        throw Exception('اطلاعات واردشده معتبر نیست');
+      }
+      throw Exception('خطا در ذخیره پروفایل (کد ${response.statusCode})');
+    } on Exception catch (e) {
+      throw Exception(_cleanMessage(e, 'اتصال به سرور برقرار نشد'));
+    }
+  }
+
+  String _cleanMessage(Object e, String fallback) {
+    final text = e.toString().replaceFirst('Exception: ', '');
+    // خطاهای شبکه (SocketException, TimeoutException) پیام فنی دارن
+    if (text.contains('SocketException') ||
+        text.contains('TimeoutException') ||
+        text.contains('ClientException')) {
+      return fallback;
+    }
+    return text;
+  }
+}
+===== ..\src\main\java\ir\pgu\user\controller\AuthController.java =====
+package ir.pgu.user.controller;
+
+import ir.pgu.user.dto.AuthResponse;
+import ir.pgu.user.model.User;
+import ir.pgu.user.service.AuthService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ir.pgu.user.dto.RegisterRequest;
+import org.springframework.web.bind.annotation.RequestBody;
+import jakarta.validation.Valid;
+import ir.pgu.user.dto.LoginRequest;
+
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+    @PostMapping("/register")
+    public String register(@Valid @RequestBody RegisterRequest request) {
+        authService.register(request);
+        return "Registration successful";
+    }
+
+    @PostMapping("/login")
+    public AuthResponse login(@Valid @RequestBody LoginRequest request) {
+        return authService.login(request);
+    }
+
+
+}
+===== ..\src\main\java\ir\pgu\user\dto\LoginRequest.java =====
+
+package ir.pgu.user.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class LoginRequest {
+
+    @NotBlank
+    private String identifier;
+
+    @NotBlank
+    private String password;
+}
+===== ..\src\main\java\ir\pgu\user\dto\RegisterRequest.java =====
+package ir.pgu.user.dto;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class RegisterRequest{
+    @NotBlank
+    private String firstName;
+
+    @NotBlank
+    private String lastName;
+
+    @NotBlank
+    private String studentNumber;
+
+
+    private String phoneNumber;
+
+    @NotBlank
+    @Size(min = 8)
+    private String password;
+
+
+
+}
+===== ..\src\main\java\ir\pgu\user\dto\AuthResponse.java =====
+
+package ir.pgu.user.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class AuthResponse {
+
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String studentNumber;
+}
+===== ..\src\main\java\ir\pgu\user\model\User.java =====
+package ir.pgu.user.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String firstName;
+
+    private String lastName;
+
+    @Column(unique = true, nullable = false)
+    private String studentNumber;
+
+    @Column(unique = true)
+    private String phoneNumber;
+
+    @Column(nullable = false)
+    private String password;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+   public void setTime(){
+       createdAt = LocalDateTime.now();
+   }
+
+}
+===== ..\src\main\java\ir\pgu\user\service\AuthService.java =====
+
+package ir.pgu.user.service;
+
+import ir.pgu.user.dto.RegisterRequest;
+import ir.pgu.user.dto.LoginRequest;
+import ir.pgu.user.model.User;
+import ir.pgu.user.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import ir.pgu.user.dto.AuthResponse;
+
+@Service
+public class AuthService {
+
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public AuthService(UserRepository userRepository,
+                       BCryptPasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public boolean isStudentNumberTaken(String studentNumber) {
+        return userRepository.existsByStudentNumber(studentNumber);
+    }
+
+    public void register(RegisterRequest request) {
+
+        if (isStudentNumberTaken(request.getStudentNumber())) {
+            throw new RuntimeException("Student number already exists");
+        }
+
+        if (request.getPhoneNumber() != null &&
+                !request.getPhoneNumber().isBlank()) {
+
+            if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+                throw new RuntimeException("Phone number already exists");
+            }
+        }
+
+        User user = new User();
+
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setStudentNumber(request.getStudentNumber());
+        user.setPhoneNumber(request.getPhoneNumber());
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        userRepository.save(user);
+    }
+
+    public AuthResponse login(LoginRequest request) {
+
+        User user = userRepository.findByStudentNumber(request.getIdentifier())
+                .or(() -> userRepository.findByPhoneNumber(request.getIdentifier()))
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(
+                request.getPassword(),
+                user.getPassword())) {
+
+            throw new RuntimeException("Invalid password");
+        }
+
+        return new AuthResponse(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getStudentNumber()
+        );
+    }
+}
+===== ..\src\main\resources\application.properties =====
+spring.application.name=student-assistant-backend
+# Server Configuration
+server.port=8080
+
+# Database Configuration
+spring.datasource.url=jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:student_assistant}
+spring.datasource.username=${DB_USERNAME:postgres}
+spring.datasource.password=${DB_PASSWORD:shasienSQL}
+
+# JPA Configuration
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+===== ..\pom.xml =====
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.13</version>
+        <relativePath/>
+    </parent>
+    <groupId>ir.pgu</groupId>
+    <artifactId>sia</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>sia</name>
+    <description>student-assistant-backend</description>
+
+    <properties>
+        <java.version>21</java.version>
+        <!-- ارتقای نسخه لومبوک برای سازگاری با جاوا ۲۱ به بعد -->
+        <lombok.version>1.18.36</lombok.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <!-- اضافه‌شده: برای @Valid, @NotBlank, @Size, @Email, @Pattern -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- تنظیم دقیق کامپایلر جاوا برای اجرای انوتیشن‌های لومبوک -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
