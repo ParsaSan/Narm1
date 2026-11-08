@@ -1,35 +1,38 @@
+
 import 'package:flutter/material.dart';
 import '../models/student_profile_model.dart';
 import '../services/profile_api_service.dart';
 import '../widgets/edit_profile_sheet.dart';
 import '../../course/presentation/course_detail_screen.dart';
-
+import '../../../core/app_routes.dart';
+import '../../auth/state/auth_controller.dart';
+ 
 class StudentProfileScreen extends StatefulWidget {
   const StudentProfileScreen({Key? key}) : super(key: key);
-
+ 
   @override
   State<StudentProfileScreen> createState() => _StudentProfileScreenState();
 }
-
+ 
 class _StudentProfileScreenState extends State<StudentProfileScreen> {
   static const Color bgColor = Color(0xFF070D1E);
   static const Color cardColor = Color(0xFF0E1B38);
   static const Color primaryBlue = Color(0xFF1D4ED8);
   static const Color avatarBg = Color(0xFF6EA8FE);
   static const Color officialTagBg = Color(0xFF162544);
-
+ 
   final _api = ProfileApiService();
-
+ 
   StudentProfile? profile;
   bool isLoading = true;
   String? error;
-
+ 
   @override
   void initState() {
     super.initState();
     _loadProfile();
   }
-
+ 
   Future<void> _loadProfile() async {
     setState(() {
       isLoading = true;
@@ -50,20 +53,20 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       });
     }
   }
-
+ 
   Future<void> _openEditProfileDialog() async {
     final current = profile;
     if (current == null) return;
-
+ 
     final updatedProfile = await showModalBottomSheet<StudentProfile>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => EditProfileSheet(initialProfile: current),
     );
-
+ 
     if (!mounted) return;
-
+ 
     if (updatedProfile != null) {
       setState(() {
         profile = updatedProfile;
@@ -76,7 +79,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       );
     }
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -102,12 +105,12 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       ),
     );
   }
-
+ 
   Widget _buildBody() {
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
-
+ 
     final p = profile;
     if (error != null || p == null) {
       return Center(
@@ -138,7 +141,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
         ),
       );
     }
-
+ 
     return RefreshIndicator(
       onRefresh: _loadProfile,
       child: ListView(
@@ -156,7 +159,11 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
           ...p.registeredCourses.map((c) => _buildCourseCard(c)),
           const SizedBox(height: 20),
           OutlinedButton.icon(
-            onPressed: () {},
+            // خروج از حساب: کاربر را خارج می‌کند و به صفحه‌ی خوش‌آمد برمی‌گرداند
+            onPressed: () {
+              authController.logout();
+              Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.welcome, (_) => false);
+            },
             icon: const Icon(Icons.logout_rounded, size: 18, color: Colors.grey),
             label: const Text('خروج از حساب کاربری', style: TextStyle(color: Colors.grey, fontSize: 13)),
             style: OutlinedButton.styleFrom(
@@ -170,7 +177,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       ),
     );
   }
-
+ 
   Widget _buildHeaderCard(StudentProfile p) {
     final name = p.fullName.trim();
     final firstLetter = name.isNotEmpty ? name.substring(0, 1) : 'س';
@@ -230,7 +237,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       ),
     );
   }
-
+ 
   Widget _buildOfficialInfoCard(StudentProfile p) {
     return Container(
       decoration: BoxDecoration(
@@ -259,7 +266,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       ),
     );
   }
-
+ 
   Widget _buildInfoRow(String label, String value, IconData icon, {bool hasOfficialBadge = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -295,7 +302,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       ),
     );
   }
-
+ 
   Widget _buildCourseCard(RegisteredCourse course) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -345,7 +352,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       ),
     );
   }
-
+ 
   Widget _buildBadge(String text, Color bg, Color fg) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -354,3 +361,5 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
     );
   }
 }
+ 
+
