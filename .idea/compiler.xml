@@ -6,7 +6,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="student-assistant-backend" />
       </profile>
       <profile name="Annotation profile for sia" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -18,6 +17,9 @@
         <module name="sia" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="student-assistant-backend" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

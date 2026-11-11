@@ -25,12 +25,6 @@ public class DashboardService {
             bannerRepository.save(new Banner(null, "ثبت‌نام نیمسال جدید", "مهلت تا پایان هفته جاری", "https://picsum.photos/600/300", "/register"));
             bannerRepository.save(new Banner(null, "مسابقات برنامه‌نویسی دانشگاه", "جوایز ارزنده برای برترین‌ها", "https://picsum.photos/600/301", "/contest"));
         }
-
-        if (recentCourseRepository.count() == 0) {
-            recentCourseRepository.save(new RecentCourse(null, "برنامه‌نویسی پیشرفته", "حبیب رستمی", LocalDateTime.now().minusHours(1)));
-            recentCourseRepository.save(new RecentCourse(null, "ساختمان داده‌ها", "ابراهیم صحافی زاده", LocalDateTime.now().minusHours(4)));
-            recentCourseRepository.save(new RecentCourse(null, "طراحی الگوریتم", "حبیب رستمی", LocalDateTime.now().minusDays(1)));
-        }
     }
 
     public List<Banner> getAllBanners() {
@@ -42,9 +36,29 @@ public class DashboardService {
     }
 
     public DashboardStats getBasicStats() {
-        long totalCourses = recentCourseRepository.count();
-        long totalFiles = 24;
-        long totalStudents = 180;
-        return new DashboardStats(totalCourses, totalFiles, totalStudents);
+        int currentTerm = 5;
+        int passedUnits = 92;
+        int currentTermUnits = 17;
+        int currentTermCoursesCount = 6;
+        String gpaTrend = "صعودی";
+        List<Double> pastTermGpas = List.of(15.5, 16.2, 16.8, 17.1, 17.75);
+
+        return new DashboardStats(
+                currentTerm,
+                passedUnits,
+                currentTermUnits,
+                currentTermCoursesCount,
+                gpaTrend,
+                pastTermGpas
+        );
+    }
+
+    public RecentCourse recordCourseVisit(Long courseId, String title, String instructor) {
+        RecentCourse course = recentCourseRepository.findById(courseId)
+                .orElse(new RecentCourse(courseId, title, instructor, LocalDateTime.now()));
+        course.setTitle(title);
+        course.setInstructor(instructor);
+        course.setLastVisitedAt(LocalDateTime.now());
+        return recentCourseRepository.save(course);
     }
 }
