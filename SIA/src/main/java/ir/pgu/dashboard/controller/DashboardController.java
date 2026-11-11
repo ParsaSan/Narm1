@@ -7,6 +7,8 @@ import ir.pgu.dashboard.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +38,11 @@ public class DashboardController {
     @GetMapping("/recent-courses")
     public List<RecentCourse> getRecentCourses() {
         return dashboardService.getRecentCourses();
+    }
+
+    // ۴. ثبت یا به‌روزرسانی بازدید یک درس
+    @PostMapping("/recent-courses/visit")
+    public RecentCourse visitCourse(@RequestBody RecentCourse course) {
+        return dashboardService.recordCourseVisit(course.getId(), course.getTitle(), course.getInstructor());
     }
 }
