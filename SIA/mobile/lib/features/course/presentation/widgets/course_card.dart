@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/course_model.dart';
+import '../../../dashboard/dashboard_api_service.dart';
 
 class CourseCard extends StatelessWidget {
   final Course course;
@@ -22,7 +23,10 @@ class CourseCard extends StatelessWidget {
         side: BorderSide(color: cs.outlineVariant.withOpacity(0.4)),
       ),
       child: InkWell(
-        onTap: onTap,
+        onTap: () {
+          DashboardApiService().recordVisit(course.id, course.title, course.instructor);
+          onTap();
+        },
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
