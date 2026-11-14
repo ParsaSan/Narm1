@@ -52,7 +52,6 @@ class StudentProfile {
   /// فقط فیلدهایی که بک‌اند اجازه ویرایششون رو می‌ده
   Map<String, dynamic> toUpdateJson() {
     return {
-      'fullName': fullName,
       'phone': phone,
       'personalEmail': personalEmail,
       'bio': bio,
@@ -60,14 +59,13 @@ class StudentProfile {
   }
 
   StudentProfile copyWith({
-    String? fullName,
     String? phone,
     String? personalEmail,
     String? bio,
   }) {
     return StudentProfile(
       id: id,
-      fullName: fullName ?? this.fullName,
+      fullName: fullName,
       studentType: studentType,
       studentNumber: studentNumber,
       major: major,

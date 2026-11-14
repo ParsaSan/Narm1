@@ -1,5 +1,6 @@
 package ir.pgu.profile.model;
 
+import ir.pgu.user.model.User;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,10 +10,11 @@ public class StudentProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToOne(optional = false)
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
 
-    private String fullName;
     private String studentType;
-    private String studentNumber;
     private String major;
     private String universityEmail;
     private int entryYear;
@@ -26,10 +28,9 @@ public class StudentProfile {
     @Column(length = 500)
     private String bio;
 
+    public User getUser() { return user; }
     public Long getId() { return id; }
-    public String getFullName() { return fullName; }
     public String getStudentType() { return studentType; }
-    public String getStudentNumber() { return studentNumber; }
     public String getMajor() { return major; }
     public String getUniversityEmail() { return universityEmail; }
     public int getEntryYear() { return entryYear; }
@@ -39,10 +40,9 @@ public class StudentProfile {
     public String getPersonalEmail() { return personalEmail; }
     public String getBio() { return bio; }
 
+    public void setUser(User user) { this.user = user; }
     public void setId(Long id) { this.id = id; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
     public void setStudentType(String studentType) { this.studentType = studentType; }
-    public void setStudentNumber(String studentNumber) { this.studentNumber = studentNumber; }
     public void setMajor(String major) { this.major = major; }
     public void setUniversityEmail(String universityEmail) { this.universityEmail = universityEmail; }
     public void setEntryYear(int entryYear) { this.entryYear = entryYear; }

@@ -1,30 +1,34 @@
 package ir.pgu.profile.model;
 
+import ir.pgu.course.model.Course;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "profile_enrolled_courses")
+@Table(name = "profile_enrolled_courses",
+       uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "course_id"}))
 public class EnrolledCourse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "student_id")
-    private Long studentId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "student_id")
+    private StudentProfile student;
 
-    @Column(name = "course_id")
-    private Long courseId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "course_id")
+    private Course course;
 
     private String membershipStatus;   // «عضو فعال»
 
     public Long getId() { return id; }
-    public Long getStudentId() { return studentId; }
-    public Long getCourseId() { return courseId; }
+    public StudentProfile getStudent() { return student; }
+    public Course getCourse() { return course; }
     public String getMembershipStatus() { return membershipStatus; }
 
     public void setId(Long id) { this.id = id; }
-    public void setStudentId(Long studentId) { this.studentId = studentId; }
-    public void setCourseId(Long courseId) { this.courseId = courseId; }
+    public void setStudent(StudentProfile student) { this.student = student; }
+    public void setCourse(Course course) { this.course = course; }
     public void setMembershipStatus(String membershipStatus) { this.membershipStatus = membershipStatus; }
 }

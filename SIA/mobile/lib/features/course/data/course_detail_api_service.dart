@@ -42,13 +42,16 @@ class CourseDetail {
 }
 
 class CourseDetailApiService {
-  // وب / دسکتاپ: localhost  |  امولاتور اندروید: 10.0.2.2
   static const String baseUrl = 'http://localhost:8080/api/course-details';
 
-  Future<CourseDetail> getDetail(int id) async {
+  Future<CourseDetail> getDetail(int id, {String? title}) async {
     try {
+      final uri = Uri.parse('$baseUrl/$id').replace(queryParameters: {
+        if (title != null && title.isNotEmpty) 'title': title,
+      });
+
       final response = await http
-          .get(Uri.parse('$baseUrl/$id'))
+          .get(uri)
           .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {

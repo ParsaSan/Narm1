@@ -10,9 +10,11 @@ class ProfileApiService {
 
   static const Duration _timeout = Duration(seconds: 10);
 
-  Future<StudentProfile> getProfile() async {
+  Future<StudentProfile> getProfile(int userId) async {
     try {
-      final response = await http.get(Uri.parse(baseUrl)).timeout(_timeout);
+      final response = await http
+          .get(Uri.parse('$baseUrl/$userId'))
+          .timeout(_timeout);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(utf8.decode(response.bodyBytes));
@@ -24,11 +26,11 @@ class ProfileApiService {
     }
   }
 
-  Future<StudentProfile> updateProfile(StudentProfile profile) async {
+  Future<StudentProfile> updateProfile(int userId, StudentProfile profile) async {
     try {
       final response = await http
           .put(
-            Uri.parse(baseUrl),
+            Uri.parse('$baseUrl/$userId'),
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             body: jsonEncode(profile.toUpdateJson()),
           )
@@ -49,7 +51,6 @@ class ProfileApiService {
 
   String _cleanMessage(Object e, String fallback) {
     final text = e.toString().replaceFirst('Exception: ', '');
-    // خطاهای شبکه (SocketException, TimeoutException) پیام فنی دارن
     if (text.contains('SocketException') ||
         text.contains('TimeoutException') ||
         text.contains('ClientException')) {
