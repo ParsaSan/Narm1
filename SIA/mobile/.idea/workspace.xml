@@ -11,11 +11,8 @@
   <component name="ChangeListManager">
     <list default="true" id="3bce45dc-a0ca-4f63-9637-bdc56f47eef6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/auth/presentation/welcome_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/auth/presentation/welcome_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/course/data/course_detail_api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/course/data/course_detail_api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/course/presentation/course_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/course/presentation/course_detail_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/profile/services/profile_api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/profile/services/profile_api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/widget_test.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/course/data/course_api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/course/data/course_api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/course/presentation/course_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/course/presentation/course_list_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

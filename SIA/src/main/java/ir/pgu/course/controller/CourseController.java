@@ -1,5 +1,6 @@
 package ir.pgu.course.controller;
 
+import ir.pgu.course.dto.CourseResponse;
 import ir.pgu.course.model.Course;
 import ir.pgu.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
@@ -11,21 +12,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/courses")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*") // برای رفع خطای اتصال به فلاتر
+@CrossOrigin(origins = "*")
 public class CourseController {
 
     private final CourseService courseService;
 
-    // دریافت تمام دروس
     @GetMapping
-    public ResponseEntity<List<Course>> getCourses(
+    public ResponseEntity<List<CourseResponse>> getCourses(
             @RequestParam(required = false) String type,
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Long userId
     ) {
-        return ResponseEntity.ok(courseService.getCourses(type, search));
+        return ResponseEntity.ok(courseService.getCoursesForUser(type, search, userId));
     }
 
-    // دریافت یک درس خاص با id
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable Long id) {
         return courseService.getCourseById(id)
@@ -33,7 +33,6 @@ public class CourseController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // ایجاد یک درس جدید
     @PostMapping
     public ResponseEntity<Course> createCourse(@RequestBody Course course) {
         return ResponseEntity.ok(courseService.saveCourse(course));
