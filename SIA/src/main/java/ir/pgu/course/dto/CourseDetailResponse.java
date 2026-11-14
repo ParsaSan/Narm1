@@ -11,6 +11,7 @@ public record CourseDetailResponse(
         String schedule,
         String location,
         String about,
-        List<String> chapters
+        List<String> chapters,
+        boolean enrolled
 ) {
 }

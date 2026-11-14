@@ -5,11 +5,13 @@ import ir.pgu.course.model.Course;
 import ir.pgu.course.model.CourseDetail;
 import ir.pgu.course.repository.CourseDetailRepository;
 import ir.pgu.course.repository.CourseRepository;
+import ir.pgu.profile.repository.EnrolledCourseRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -23,15 +25,19 @@ public class CourseDetailController {
 
     private final CourseRepository courseRepository;
     private final CourseDetailRepository detailRepository;
+    private final EnrolledCourseRepository enrolledRepository;
 
     public CourseDetailController(CourseRepository courseRepository,
-                                  CourseDetailRepository detailRepository) {
+                                  CourseDetailRepository detailRepository,
+                                  EnrolledCourseRepository enrolledRepository) {
         this.courseRepository = courseRepository;
         this.detailRepository = detailRepository;
+        this.enrolledRepository = enrolledRepository;
     }
 
     @GetMapping("/{id}")
-    public CourseDetailResponse get(@PathVariable Long id) {
+    public CourseDetailResponse get(@PathVariable Long id,
+                                    @RequestParam(required = false) Long userId) {
         Course c = courseRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "درس پیدا نشد"));
@@ -49,6 +55,10 @@ public class CourseDetailController {
                 ? courseDescription
                 : d.getAbout();
 
+        boolean enrolled = userId != null
+                && userId > 0
+                && enrolledRepository.existsByStudentUserIdAndCourseId(userId, id);
+
         return new CourseDetailResponse(
                 c.getId(),
                 c.getCode(),
@@ -58,7 +68,8 @@ public class CourseDetailController {
                 d == null ? "" : nz(d.getSchedule()),
                 d == null ? "" : nz(d.getLocation()),
                 about,
-                chapters);
+                chapters,
+                enrolled);
     }
 
     private static String nz(String s) {

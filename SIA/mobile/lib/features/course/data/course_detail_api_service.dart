@@ -11,6 +11,7 @@ class CourseDetail {
   final String location;
   final String about;
   final List<String> chapters;
+  final bool enrolled;
 
   CourseDetail({
     required this.id,
@@ -22,6 +23,7 @@ class CourseDetail {
     required this.location,
     required this.about,
     required this.chapters,
+    required this.enrolled,
   });
 
   factory CourseDetail.fromJson(Map<String, dynamic> json) {
@@ -37,18 +39,27 @@ class CourseDetail {
       chapters: (json['chapters'] as List<dynamic>? ?? [])
           .map((e) => e.toString())
           .toList(),
+      enrolled: json['enrolled'] == true,
     );
   }
 }
 
 class CourseDetailApiService {
-  static const String baseUrl = 'http://localhost:8080/api/course-details';
+  static const String _apiBase = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://localhost:8080/api',
+  );
+  static String get baseUrl => '$_apiBase/course-details';
 
-  Future<CourseDetail> getDetail(int id, {String? title}) async {
+  Future<CourseDetail> getDetail(int id, {int? userId, String? title}) async {
     try {
-      final uri = Uri.parse('$baseUrl/$id').replace(queryParameters: {
+      final params = <String, String>{
+        if (userId != null && userId > 0) 'userId': userId.toString(),
         if (title != null && title.isNotEmpty) 'title': title,
-      });
+      };
+      final uri = params.isEmpty
+          ? Uri.parse('$baseUrl/$id')
+          : Uri.parse('$baseUrl/$id').replace(queryParameters: params);
 
       final response = await http
           .get(uri)

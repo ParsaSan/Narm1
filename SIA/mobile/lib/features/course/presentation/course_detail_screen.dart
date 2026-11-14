@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/course_detail_api_service.dart';
 import '../../dashboard/dashboard_api_service.dart';
+import '../../auth/state/auth_controller.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final int courseId;
@@ -45,7 +46,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
       _error = null;
     });
     try {
-      final c = await _api.getDetail(widget.courseId);
+      final userId = authController.user?.id;
+      final c = await _api.getDetail(widget.courseId, userId: userId);
       if (!mounted) return;
       setState(() {
         _course = c;
@@ -131,24 +133,33 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
                   ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: memberGreen,
-                  borderRadius: BorderRadius.circular(10),
+              if (c != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: c.enrolled ? memberGreen : const Color(0xFF1E293B),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        c.enrolled ? Icons.check : Icons.info_outline,
+                        color: c.enrolled ? Colors.white : Colors.white70,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        c.enrolled ? 'عضو درس' : 'اخذ نشده',
+                        style: TextStyle(
+                          color: c.enrolled ? Colors.white : Colors.white70,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.check, color: Colors.white, size: 16),
-                    SizedBox(width: 4),
-                    Text(
-                      'عضو درس',
-                      style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
           if (c != null && (c.schedule.isNotEmpty || c.location.isNotEmpty)) ...[

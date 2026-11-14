@@ -66,7 +66,7 @@ class WelcomeScreen extends StatelessWidget {
               foregroundColor: Colors.white,
             ),
             icon: const Icon(Icons.bolt_rounded),
-            label: const Text('ورود مستقیم نسخه دمو (پیشنهاد به داوران)'),
+            label: const Text('ورود مستقیم نسخه دمو'),
           ),
           const SizedBox(height: 14),
           FilledButton.icon(
@@ -99,49 +99,6 @@ class _TeamCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
       ),
-<<<<<<< HEAD
-      
-=======
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: AppColors.teamBg,
-              borderRadius: BorderRadius.circular(22),
-            ),
-            child: const Icon(
-              Icons.groups_rounded,
-              color: AppColors.teamIcon,
-            ),
-          ),
-          const SizedBox(width: 12),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'پروژه مهندسی نرم‌افزار — اسپرینت ۱ از ۴',
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'توسعه‌داده‌شده توسط تیم ۴ نفره دانشجویی',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
->>>>>>> 2d4b0265183a9e4ae31d084db6a56f0400a24f5f
     );
   }
 }

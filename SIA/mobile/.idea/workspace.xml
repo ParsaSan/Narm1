@@ -10,63 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3bce45dc-a0ca-4f63-9637-bdc56f47eef6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/dataSources.local.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/libraries/Dart_Packages.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/libraries/Dart_SDK.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/libraries/Flutter_Plugins.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../.vscode/settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/main_dart.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/main_dart.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata" beforeDir="false" afterPath="$PROJECT_DIR$/.metadata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/test3.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/core/test4.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/features/auth/presentation/welcome_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/auth/presentation/welcome_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/auth/test5.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/features/course/data/course_detail_api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/course/data/course_detail_api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/dashboard/test7.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/profile/models/student_profile_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/profile/models/student_profile_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/profile/screens/student_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/profile/screens/student_profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/course/presentation/course_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/course/presentation/course_detail_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/features/profile/services/profile_api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/profile/services/profile_api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/profile/test8.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/profile/widgets/edit_profile_sheet.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/profile/widgets/edit_profile_sheet.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/user/test9.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/shared/test10.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/auth/test12.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/common/test13.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/config/ProfileDataInitializer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/config/test14.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/dashboard/test16.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/controller/ProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/controller/ProfileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/dto/UpdateProfileRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/dto/UpdateProfileRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/model/EnrolledCourse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/model/EnrolledCourse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/model/StudentProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/model/StudentProfile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/repository/StudentProfileRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/repository/StudentProfileRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/service/ProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/service/ProfileService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/test17.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/user/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/user/service/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/user/test18.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/resources/db/migration/test19.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../cd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../dev.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../out/production/Narm1/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../out/production/Narm1/.idea/Narm1.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../out/production/Narm1/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../out/production/Narm1/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../out/production/Narm1/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../out/production/Narm1/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../out/production/Narm1/dev.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/GitTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/widget_test.dart" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

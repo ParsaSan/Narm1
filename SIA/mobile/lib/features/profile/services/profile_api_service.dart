@@ -6,15 +6,20 @@ class ProfileApiService {
   // اندروید امولاتور: 10.0.2.2
   // iOS سیمولاتور / وب / دسکتاپ: localhost
   // گوشی واقعی: IP کامپیوتر، مثلا 192.168.1.5
-  static const String baseUrl = 'http://localhost:8080/api/profile';
-
+  static const String _apiBase = String.fromEnvironment(
+      'API_BASE_URL',
+      defaultValue: 'http://localhost:8080/api',
+    );
+    static String get baseUrl => '$_apiBase/profile';
   static const Duration _timeout = Duration(seconds: 10);
 
   Future<StudentProfile> getProfile(int userId) async {
     try {
+      print('>>> CALLING: $baseUrl/$userId');
       final response = await http
           .get(Uri.parse('$baseUrl/$userId'))
           .timeout(_timeout);
+      print('>>> STATUS: ${response.statusCode} | BODY: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(utf8.decode(response.bodyBytes));
