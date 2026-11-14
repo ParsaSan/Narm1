@@ -49,8 +49,7 @@ class WelcomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           const Text(
-            'پلتفرم یکپارچه مدیریت دروس، منابع آموزشی، تکالیف و امتحانات کلاسی — '
-            'طراحی‌شده توسط تیم دانشجویی در قالب متدولوژی چابک.',
+            'پلتفرم یکپارچه مدیریت دروس، منابع آموزشی، تکالیف و امتحانات کلاسی ',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13.5,
@@ -58,11 +57,7 @@ class WelcomeScreen extends StatelessWidget {
               color: AppColors.textSecondary,
             ),
           ),
-          const SizedBox(height: 24),
-          const InfoBanner(
-            text: 'پروتوتایپ رسمی اسپرینت ۱: احراز هویت آزمایشی، مشاهده دروس، '
-                'پیش‌نمایش منابع و تکالیف و ویرایش محلی پروفایل تحصیلی.',
-          ),
+          
           const SizedBox(height: 24),
           FilledButton.icon(
             onPressed: () => _enterDemo(context),
@@ -71,7 +66,7 @@ class WelcomeScreen extends StatelessWidget {
               foregroundColor: Colors.white,
             ),
             icon: const Icon(Icons.bolt_rounded),
-            label: const Text('ورود مستقیم نسخه دمو (پیشنهاد به داوران)'),
+            label: const Text('ورود مستقیم نسخه دمو'),
           ),
           const SizedBox(height: 14),
           FilledButton.icon(
@@ -103,45 +98,6 @@ class _TeamCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: AppColors.teamBg,
-              borderRadius: BorderRadius.circular(22),
-            ),
-            child: const Icon(
-              Icons.groups_rounded,
-              color: AppColors.teamIcon,
-            ),
-          ),
-          const SizedBox(width: 12),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'پروژه مهندسی نرم‌افزار — اسپرینت ۱ از ۴',
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'توسعه‌داده‌شده توسط تیم ۴ نفره دانشجویی',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

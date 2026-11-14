@@ -38,8 +38,20 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       isLoading = true;
       error = null;
     });
+
+    final userId = authController.user?.id;
+    if (userId == null || userId <= 0) {
+      setState(() {
+        error = authController.isDemo
+            ? 'در حالت دمو پروفایل سرور در دسترس نیست'
+            : 'شناسه کاربر یافت نشد؛ لطفاً دوباره وارد شوید';
+        isLoading = false;
+      });
+      return;
+    }
+
     try {
-      final p = await _api.getProfile();
+      final p = await _api.getProfile(userId);
       if (!mounted) return;
       setState(() {
         profile = p;
@@ -54,19 +66,23 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
     }
   }
  
-  Future<void> _openEditProfileDialog() async {
+    Future<void> _openEditProfileDialog() async {
     final current = profile;
-    if (current == null) return;
- 
+    final userId = authController.user?.id;
+    if (current == null || userId == null || userId <= 0) return;
+
     final updatedProfile = await showModalBottomSheet<StudentProfile>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => EditProfileSheet(initialProfile: current),
+      builder: (context) => EditProfileSheet(
+        initialProfile: current,
+        userId: userId,
+      ),
     );
- 
+
     if (!mounted) return;
- 
+
     if (updatedProfile != null) {
       setState(() {
         profile = updatedProfile;
@@ -93,11 +109,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             children: [
               const Text('پروفایل تحصیلی دانشجو', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
               const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(color: const Color(0xFF1E3A8A), borderRadius: BorderRadius.circular(12)),
-                child: const Text('اسپرینت ۱', style: TextStyle(fontSize: 10, color: Color(0xFF93C5FD), fontWeight: FontWeight.bold)),
-              ),
+              
             ],
           ),
         ),
@@ -206,18 +218,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             ),
           ],
           const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildBadge(
-                p.studentType.isNotEmpty ? p.studentType : 'دانشجوی رسمی',
-                const Color(0xFF065F46),
-                const Color(0xFF34D399),
-              ),
-              const SizedBox(width: 8),
-              _buildBadge('نسخه نمایشی اسپرینت ۱', const Color(0xFF1E3A8A), const Color(0xFF93C5FD)),
-            ],
-          ),
+          
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,

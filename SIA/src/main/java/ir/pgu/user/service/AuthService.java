@@ -1,8 +1,8 @@
-
 package ir.pgu.user.service;
 
-import ir.pgu.user.dto.LoginRequest;
+import ir.pgu.profile.repository.StudentProfileRepository;
 import ir.pgu.user.dto.AuthResponse;
+import ir.pgu.user.dto.LoginRequest;
 import ir.pgu.user.model.User;
 import ir.pgu.user.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +15,7 @@ public class AuthService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     public AuthService(UserRepository userRepository,
+                       StudentProfileRepository profileRepository,
                        BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -26,10 +27,7 @@ public class AuthService {
                 .or(() -> userRepository.findByPhoneNumber(request.getIdentifier()))
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!passwordEncoder.matches(
-                request.getPassword(),
-                user.getPassword())) {
-
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
 

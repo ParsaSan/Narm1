@@ -6,13 +6,20 @@ class ProfileApiService {
   // اندروید امولاتور: 10.0.2.2
   // iOS سیمولاتور / وب / دسکتاپ: localhost
   // گوشی واقعی: IP کامپیوتر، مثلا 192.168.1.5
-  static const String baseUrl = 'http://localhost:8080/api/profile';
-
+  static const String _apiBase = String.fromEnvironment(
+      'API_BASE_URL',
+      defaultValue: 'http://localhost:8080/api',
+    );
+    static String get baseUrl => '$_apiBase/profile';
   static const Duration _timeout = Duration(seconds: 10);
 
-  Future<StudentProfile> getProfile() async {
+  Future<StudentProfile> getProfile(int userId) async {
     try {
-      final response = await http.get(Uri.parse(baseUrl)).timeout(_timeout);
+      print('>>> CALLING: $baseUrl/$userId');
+      final response = await http
+          .get(Uri.parse('$baseUrl/$userId'))
+          .timeout(_timeout);
+      print('>>> STATUS: ${response.statusCode} | BODY: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(utf8.decode(response.bodyBytes));
@@ -24,11 +31,11 @@ class ProfileApiService {
     }
   }
 
-  Future<StudentProfile> updateProfile(StudentProfile profile) async {
+  Future<StudentProfile> updateProfile(int userId, StudentProfile profile) async {
     try {
       final response = await http
           .put(
-            Uri.parse(baseUrl),
+            Uri.parse('$baseUrl/$userId'),
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             body: jsonEncode(profile.toUpdateJson()),
           )
@@ -49,7 +56,6 @@ class ProfileApiService {
 
   String _cleanMessage(Object e, String fallback) {
     final text = e.toString().replaceFirst('Exception: ', '');
-    // خطاهای شبکه (SocketException, TimeoutException) پیام فنی دارن
     if (text.contains('SocketException') ||
         text.contains('TimeoutException') ||
         text.contains('ClientException')) {

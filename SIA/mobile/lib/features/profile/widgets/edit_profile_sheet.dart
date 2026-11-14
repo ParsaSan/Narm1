@@ -4,8 +4,13 @@ import '../services/profile_api_service.dart';
 
 class EditProfileSheet extends StatefulWidget {
   final StudentProfile initialProfile;
+  final int userId;
 
-  const EditProfileSheet({Key? key, required this.initialProfile}) : super(key: key);
+  const EditProfileSheet({
+    Key? key,
+    required this.initialProfile,
+    required this.userId,
+  }) : super(key: key);
 
   @override
   State<EditProfileSheet> createState() => _EditProfileSheetState();
@@ -15,7 +20,6 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
   final _formKey = GlobalKey<FormState>();
   final _api = ProfileApiService();
 
-  late TextEditingController _nameController;
   late TextEditingController _phoneController;
   late TextEditingController _personalEmailController;
   late TextEditingController _bioController;
@@ -25,7 +29,6 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.initialProfile.fullName);
     _phoneController = TextEditingController(text: widget.initialProfile.phone);
     _personalEmailController = TextEditingController(text: widget.initialProfile.personalEmail);
     _bioController = TextEditingController(text: widget.initialProfile.bio);
@@ -33,7 +36,6 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
 
   @override
   void dispose() {
-    _nameController.dispose();
     _phoneController.dispose();
     _personalEmailController.dispose();
     _bioController.dispose();
@@ -46,14 +48,13 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
     setState(() => _isSaving = true);
 
     final edited = widget.initialProfile.copyWith(
-      fullName: _nameController.text.trim(),
       phone: _phoneController.text.trim(),
       personalEmail: _personalEmailController.text.trim(),
       bio: _bioController.text.trim(),
     );
 
     try {
-      final saved = await _api.updateProfile(edited);
+      final saved = await _api.updateProfile(widget.userId, edited);
       if (!mounted) return;
       Navigator.of(context).pop(saved);
     } catch (e) {
@@ -105,19 +106,6 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                 ),
                 const Divider(color: Colors.white12),
                 const SizedBox(height: 12),
-
-                // نام
-                TextFormField(
-                  controller: _nameController,
-                  style: const TextStyle(color: Colors.white, fontSize: 13),
-                  decoration: _inputDecoration('نام و نام خانوادگی', Icons.person_outline),
-                  validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'نام نمی‌تواند خالی باشد';
-                    if (v.trim().length > 80) return 'حداکثر ۸۰ کاراکتر';
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 14),
 
                 // شماره تماس
                 TextFormField(
