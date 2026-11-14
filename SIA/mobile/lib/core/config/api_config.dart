@@ -15,7 +15,7 @@ class ApiConfig {
 
   // مطابق AuthController.java بک‌اند
   static const loginPath = '/auth/login';
-  static const registerPath = '/auth/register';
+
 
   static const timeout = Duration(seconds: 10);
 }
