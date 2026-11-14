@@ -3,6 +3,7 @@ import '../data/course_model.dart';
 import '../data/course_api_service.dart';
 import 'widgets/course_card.dart';
 import 'course_detail_screen.dart';
+import '../../auth/state/auth_controller.dart';
 
 class CourseListScreen extends StatefulWidget {
   const CourseListScreen({super.key});
@@ -36,12 +37,15 @@ class _CourseListScreenState extends State<CourseListScreen> {
     });
 
     try {
-      final courses = await CourseApiService.fetchCourses();
+      final userId = authController.user?.id;
+      final courses = await CourseApiService.fetchCourses(userId: userId);
+      if (!mounted) return;
       setState(() {
         _allCourses = courses;
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _errorMessage = 'خطا در برقراری ارتباط با سرور. آیا بک‌اند روشن است؟';
         _isLoading = false;

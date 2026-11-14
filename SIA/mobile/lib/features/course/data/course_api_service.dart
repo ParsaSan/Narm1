@@ -3,16 +3,26 @@ import 'package:http/http.dart' as http;
 import 'course_model.dart';
 
 class CourseApiService {
-  // آدرس سرور اسپرینگ بوت (برای مرورگر کروم و وب localhost کار می‌کند)
-  static const String baseUrl = 'http://localhost:8080/api/courses';
+  static const String _apiBase = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://localhost:8080/api',
+  );
+  static String get baseUrl => '$_apiBase/courses';
 
-  // دریافت لیست تمام دروس از سرور
-  static Future<List<Course>> fetchCourses({String? type, String? search}) async {
+  static Future<List<Course>> fetchCourses({
+    String? type,
+    String? search,
+    int? userId,
+  }) async {
     try {
-      final uri = Uri.parse(baseUrl).replace(queryParameters: {
+      final params = <String, String>{
         if (type != null && type != 'همه') 'type': type,
         if (search != null && search.isNotEmpty) 'search': search,
-      });
+        if (userId != null && userId > 0) 'userId': userId.toString(),
+      };
+      final uri = params.isEmpty
+          ? Uri.parse(baseUrl)
+          : Uri.parse(baseUrl).replace(queryParameters: params);
 
       final response = await http.get(uri);
 
