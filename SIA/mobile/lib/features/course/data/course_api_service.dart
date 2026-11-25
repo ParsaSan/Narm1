@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import '../../../core/network/auth_http_client.dart';
 import 'course_model.dart';
 
 class CourseApiService {
@@ -24,7 +24,7 @@ class CourseApiService {
           ? Uri.parse(baseUrl)
           : Uri.parse(baseUrl).replace(queryParameters: params);
 
-      final response = await http.get(uri);
+      final response = await authHttp.get(uri);
 
       if (response.statusCode == 200) {
         final List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));

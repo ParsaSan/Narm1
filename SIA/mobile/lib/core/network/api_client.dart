@@ -5,9 +5,10 @@ import 'package:http/http.dart' as http;
 
 import '../config/api_config.dart';
 import 'api_exception.dart';
+import 'auth_http_client.dart';
 
 class ApiClient {
-  ApiClient({http.Client? client}) : _client = client ?? http.Client();
+  ApiClient({http.Client? client}) : _client = client ?? authHttp;
 
   final http.Client _client;
 

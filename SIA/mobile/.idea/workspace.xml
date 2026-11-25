@@ -11,8 +11,27 @@
   <component name="ChangeListManager">
     <list default="true" id="3bce45dc-a0ca-4f63-9637-bdc56f47eef6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/config/api_config.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/config/api_config.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/network/api_client.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/network/api_client.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/auth/data/auth_models.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/auth/data/auth_models.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/auth/state/auth_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/auth/state/auth_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/features/course/data/course_api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/course/data/course_api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/features/course/presentation/course_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/course/presentation/course_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/course/data/course_detail_api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/course/data/course_detail_api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/dashboard/dashboard_api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/dashboard/dashboard_api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/features/profile/services/profile_api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/features/profile/services/profile_api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/shared/layout/main_layout.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/shared/layout/main_layout.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/shared/layout/sia_app_bar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/shared/layout/sia_app_bar.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/course/dto/CourseDetailResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/course/dto/CourseDetailResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/course/dto/CourseResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/course/dto/CourseResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/course/model/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/course/model/Course.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/course/model/CourseDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/course/model/CourseDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/dto/EnrolledCourseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/dto/EnrolledCourseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/dto/ProfileResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/dto/ProfileResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/dto/UpdateProfileRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/dto/UpdateProfileRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/service/ProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/ir/pgu/profile/service/ProfileService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
