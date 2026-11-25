@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import '../../../core/network/auth_http_client.dart';
 import '../models/student_profile_model.dart';
 
 class ProfileApiService {
@@ -16,7 +16,7 @@ class ProfileApiService {
   Future<StudentProfile> getProfile(int userId) async {
     try {
       print('>>> CALLING: $baseUrl/$userId');
-      final response = await http
+      final response = await authHttp
           .get(Uri.parse('$baseUrl/$userId'))
           .timeout(_timeout);
       print('>>> STATUS: ${response.statusCode} | BODY: ${response.body}');
@@ -33,7 +33,7 @@ class ProfileApiService {
 
   Future<StudentProfile> updateProfile(int userId, StudentProfile profile) async {
     try {
-      final response = await http
+      final response = await authHttp
           .put(
             Uri.parse('$baseUrl/$userId'),
             headers: {'Content-Type': 'application/json; charset=UTF-8'},

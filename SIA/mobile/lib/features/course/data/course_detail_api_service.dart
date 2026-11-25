@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-
+import '../../../core/network/auth_http_client.dart';
 class CourseDetail {
   final int id;
   final String code;
@@ -61,7 +60,7 @@ class CourseDetailApiService {
           ? Uri.parse('$baseUrl/$id')
           : Uri.parse('$baseUrl/$id').replace(queryParameters: params);
 
-      final response = await http
+      final response = await authHttp
           .get(uri)
           .timeout(const Duration(seconds: 10));
 

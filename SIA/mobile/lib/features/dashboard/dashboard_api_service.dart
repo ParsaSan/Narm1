@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import '../../core/network/auth_http_client.dart';
 import 'dashboard_models.dart';
 
 class DashboardApiService {
@@ -8,7 +8,7 @@ class DashboardApiService {
 
   // ۱. دریافت آمار اولیه سامانه
   Future<DashboardStatsModel> fetchStats() async {
-    final response = await http.get(Uri.parse('$baseUrl/stats'));
+    final response = await authHttp.get(Uri.parse('$baseUrl/stats'));
     if (response.statusCode == 200) {
       final data = json.decode(utf8.decode(response.bodyBytes));
       return DashboardStatsModel.fromJson(data);
@@ -19,7 +19,7 @@ class DashboardApiService {
 
   // ۲. دریافت بنرها
   Future<List<BannerModel>> fetchBanners() async {
-    final response = await http.get(Uri.parse('$baseUrl/banners'));
+    final response = await authHttp.get(Uri.parse('$baseUrl/banners'));
     if (response.statusCode == 200) {
       final List data = json.decode(utf8.decode(response.bodyBytes));
       return data.map((item) => BannerModel.fromJson(item)).toList();
@@ -30,7 +30,7 @@ class DashboardApiService {
 
   // ۳. دریافت ۳ درس اخیراً بازدیدشده
   Future<List<RecentCourseModel>> fetchRecentCourses() async {
-    final response = await http.get(Uri.parse('$baseUrl/recent-courses'));
+    final response = await authHttp.get(Uri.parse('$baseUrl/recent-courses'));
     if (response.statusCode == 200) {
       final List data = json.decode(utf8.decode(response.bodyBytes));
       return data.map((item) => RecentCourseModel.fromJson(item)).toList();
@@ -42,7 +42,7 @@ class DashboardApiService {
   // ۴. ارسال کلیک و بازدید درس به سرور
   Future<void> recordVisit(int courseId, String title, String instructor) async {
     try {
-      await http.post(
+      await authHttp.post(
         Uri.parse('$baseUrl/recent-courses/visit'),
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: json.encode({

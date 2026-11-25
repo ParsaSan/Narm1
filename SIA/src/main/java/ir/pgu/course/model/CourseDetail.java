@@ -18,7 +18,6 @@ public class CourseDetail {
     @Column(length = 2000)
     private String about;
 
-    // سرفصل‌ها: هر خط یک فصل
     @Column(length = 4000)
     private String chapters;
 

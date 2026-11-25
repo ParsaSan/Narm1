@@ -36,9 +36,9 @@ public class ProfileService {
     public ProfileResponse updateProfile(Long userId, UpdateProfileRequest req) {
         StudentProfile s = findStudent(userId);
         // فقط این سه فیلد قابل ویرایش‌اند؛ نام و شماره دانشجویی عمداً دست نمی‌خورند
-        s.setPhone(req.phone());
-        s.setPersonalEmail(req.personalEmail());
-        s.setBio(req.bio());
+        s.setPhone(req.getPhone());
+        s.setPersonalEmail(req.getPersonalEmail());
+        s.setBio(req.getBio());
         studentRepository.save(s);
         return buildResponse(s);
     }

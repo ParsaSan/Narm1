@@ -1,10 +1,3 @@
-/// آدرس سرور بک‌اند (Spring Boot روی پورت 8080).
-/// مثل بقیه‌ی سرویس‌های تیم، پیش‌فرض localhost است.
-///   - اجرا روی Chrome یا ویندوز: localhost درست است.
-///   - امولاتور اندروید: http://10.0.2.2:8080/api
-///   - گوشی واقعی: IP کامپیوتر، مثلاً http://192.168.1.5:8080/api
-/// بدون تغییر کد هم می‌شود عوضش کرد:
-///   flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080/api
 class ApiConfig {
   ApiConfig._();
 
@@ -16,6 +9,14 @@ class ApiConfig {
   // مطابق AuthController.java بک‌اند
   static const loginPath = '/auth/login';
 
+  // ⚠️ فرضی؛ بعد از جواب ساناز اصلاح شود
+  static const tokenField = 'token';
+  static const resourcesPath = '/resources';
+
+  // محدودیت‌های آپلود جزوه
+  static const maxFileBytes = 100 * 1024 * 1024; // ۱۰۰ مگابایت
+  static const allowedFileExtensions = ['pdf', 'docx', 'zip', 'png', 'jpg', 'jpeg'];
 
   static const timeout = Duration(seconds: 10);
+  static const uploadTimeout = Duration(minutes: 10);
 }
