@@ -2,7 +2,9 @@ package ir.pgu.enrollment;
 
 import java.util.List;
 
+import ir.pgu.profile.model.EnrolledCourse;
+
 public interface CourseSource {
 
-    List<EnrolledCourseInfo> fetchEnrolledCourses(String studentNumber);
+    List<EnrolledCourse> fetchEnrolledCourses(String studentNumber);
 }
