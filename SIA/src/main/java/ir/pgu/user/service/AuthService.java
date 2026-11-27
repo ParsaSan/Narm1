@@ -13,12 +13,14 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public AuthService(UserRepository userRepository,
                        StudentProfileRepository profileRepository,
-                       BCryptPasswordEncoder passwordEncoder) {
+                       BCryptPasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -31,11 +33,15 @@ public class AuthService {
             throw new RuntimeException("Invalid password");
         }
 
+        String token = jwtService.generateToken(user.getId());
+
         return new AuthResponse(
                 user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getStudentNumber()
+                user.getStudentNumber(),
+                token
+
         );
     }
 }
