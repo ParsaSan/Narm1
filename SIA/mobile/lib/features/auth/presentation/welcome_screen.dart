@@ -80,25 +80,9 @@ class WelcomeScreen extends StatelessWidget {
             icon: const Icon(Icons.login_rounded),
             label: const Text('ورود با شناسه دانشجویی'),
           ),
-          const SizedBox(height: 36),
-          const _TeamCard(),
         ],
       ),
     );
   }
 }
 
-class _TeamCard extends StatelessWidget {
-  const _TeamCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-      ),
-    );
-  }
-}

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +9,7 @@ import '../../../core/config/api_config.dart';
 import '../../../core/network/api_exception.dart';
 import '../../../core/network/auth_http_client.dart';
 import '../../../core/utils/file_validator.dart';
+import '../../course/data/course_model.dart';
 
 /// ارتباط با API جزوه‌ها.
 class ResourceRepository {
@@ -21,6 +23,33 @@ class ResourceRepository {
   static const _descriptionField = 'description';
   static const _courseIdField = 'courseId';
   static const _isPublicField = 'isPublic';
+
+    /// دروسی که کاربر اجازه‌ی آپلود جزوه برایشان دارد (پاس‌شده یا ترم جاری).
+  Future<List<Course>> fetchEligibleCourses(int userId) async {
+    final uri = Uri.parse('${ApiConfig.baseUrl}${ApiConfig.eligibleCoursesPath}')
+        .replace(queryParameters: {'userId': userId.toString()});
+
+    final http.Response response;
+    try {
+      response = await _client.get(uri).timeout(ApiConfig.timeout);
+    } on TimeoutException {
+      throw const ApiException('پاسخی از سرور نرسید. دوباره تلاش کنید.');
+    } on http.ClientException {
+      throw const ApiException(
+        'اتصال به سرور برقرار نشد. مطمئن شوید بک‌اند روشن است.',
+      );
+    }
+
+    if (response.statusCode != 200) {
+      throw ApiException(
+        ApiException.defaultMessage(response.statusCode),
+        statusCode: response.statusCode,
+      );
+    }
+
+    final List<dynamic> body = jsonDecode(utf8.decode(response.bodyBytes));
+    return body.map((e) => Course.fromJson(e as Map<String, dynamic>)).toList();
+  }
 
   Future<void> upload({
     required String title,
