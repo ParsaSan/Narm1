@@ -11,7 +11,6 @@ import '../../../shared/layout/sia_app_bar.dart';
 import '../../../shared/widgets/form_error_banner.dart';
 import '../../../shared/widgets/submit_button.dart';
 import '../../auth/state/auth_controller.dart';
-import '../../course/data/course_api_service.dart';
 import '../../course/data/course_model.dart';
 import '../data/resource_repository.dart';
 
@@ -52,18 +51,34 @@ class _UploadResourceScreenState extends State<UploadResourceScreen> {
     super.dispose();
   }
 
-  Future<void> _loadCourses() async {
+    Future<void> _loadCourses() async {
     setState(() {
       _loadingCourses = true;
       _coursesError = null;
     });
+
+    final userId = authController.user?.id;
+    if (userId == null || userId <= 0) {
+      setState(() {
+        _coursesError = authController.isDemo
+            ? 'در حالت دمو آپلود جزوه ممکن نیست.'
+            : 'شناسه کاربر یافت نشد؛ لطفاً دوباره وارد شوید.';
+        _loadingCourses = false;
+      });
+      return;
+    }
+
     try {
-      final list = await CourseApiService.fetchCourses(
-        userId: authController.user?.id,
-      );
+      final list = await _repo.fetchEligibleCourses(userId);
       if (!mounted) return;
       setState(() {
         _courses = list;
+        _loadingCourses = false;
+      });
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _coursesError = e.message;
         _loadingCourses = false;
       });
     } catch (_) {

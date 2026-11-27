@@ -2,6 +2,7 @@ package ir.pgu.enrollment;
 
 import ir.pgu.course.model.Course;
 import ir.pgu.course.repository.CourseRepository;
+import ir.pgu.profile.model.AcademicStatus;
 import ir.pgu.profile.model.EnrolledCourse;
 import ir.pgu.profile.model.StudentProfile;
 import ir.pgu.profile.repository.EnrolledCourseRepository;
@@ -12,12 +13,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class EnrollmentSyncService {
+
+    private static final String ACTIVE_STATUS = "عضو فعال";
+    private static final String PASSED_STATUS = "گذرانده";
 
     private final CourseSource courseSource;
     private final UserRepository userRepository;
@@ -28,34 +33,33 @@ public class EnrollmentSyncService {
     @Transactional
     public void syncStudent(String studentNumber) {
         User user = userRepository.findByStudentNumber(studentNumber).orElse(null);
-        if (user == null) {
-            return;
-        }
+        if (user == null) return;
 
         StudentProfile profile = profileRepository.findByUserId(user.getId()).orElse(null);
-        if (profile == null) {
-            return; // پروفایل ندارد، چیزی برای sync نیست
-        }
+        if (profile == null) return;
 
-        List<String> codes = courseSource.fetchEnrolledCourseCodes(studentNumber);
-        if (codes.isEmpty()) {
-            return;
+        List<EnrolledCourseInfo> infos = courseSource.fetchEnrolledCourses(studentNumber);
+        if (infos.isEmpty()) return;
+
+        Map<String, AcademicStatus> statusByCode = new HashMap<>();
+        for (EnrolledCourseInfo i : infos) {
+            statusByCode.put(i.courseCode(), i.status());
         }
-        Set<String> codeSet = Set.copyOf(codes);
 
         for (Course course : courseRepository.findAll()) {
-            if (!codeSet.contains(course.getCode())) {
-                continue;
-            }
-            boolean exists = enrolledRepository
-                    .existsByStudentUserIdAndCourseId(user.getId(), course.getId());
-            if (!exists) {
-                EnrolledCourse e = new EnrolledCourse();
-                e.setStudent(profile);
-                e.setCourse(course);
-                e.setMembershipStatus("عضو فعال");
-                enrolledRepository.save(e);
-            }
+            AcademicStatus status = statusByCode.get(course.getCode());
+            if (status == null) continue;
+
+            EnrolledCourse enrolled = enrolledRepository
+                    .findByStudentUserIdAndCourseId(user.getId(), course.getId())
+                    .orElseGet(EnrolledCourse::new);
+
+            enrolled.setStudent(profile);
+            enrolled.setCourse(course);
+            enrolled.setAcademicStatus(status);
+            enrolled.setMembershipStatus(
+                    status == AcademicStatus.PASSED ? PASSED_STATUS : ACTIVE_STATUS);
+            enrolledRepository.save(enrolled);
         }
     }
 }

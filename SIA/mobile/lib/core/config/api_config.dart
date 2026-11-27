@@ -12,6 +12,7 @@ class ApiConfig {
   // ⚠️ فرضی؛ بعد از جواب ساناز اصلاح شود
   static const tokenField = 'token';
   static const resourcesPath = '/resources';
+  static const eligibleCoursesPath = '/courses/eligible-for-upload';
 
   // محدودیت‌های آپلود جزوه
   static const maxFileBytes = 100 * 1024 * 1024; // ۱۰۰ مگابایت

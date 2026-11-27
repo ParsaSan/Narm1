@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface CourseSource {
 
-    List<String> fetchEnrolledCourseCodes(String studentNumber);
+    List<EnrolledCourseInfo> fetchEnrolledCourses(String studentNumber);
 }
