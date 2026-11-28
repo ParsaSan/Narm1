@@ -4,6 +4,7 @@ import '../../features/course/presentation/course_list_screen.dart';
 import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/profile/screens/student_profile_screen.dart';
 import 'placeholder_page.dart';
+import '../../features/resource/presentation/resource_bank_screen.dart';
 
 class _Tab {
   const _Tab(this.label, this.icon, this.selectedIcon, this.page);
@@ -36,7 +37,7 @@ class _MainLayoutState extends State<MainLayout> {
     _Tab('تکالیف', Icons.assignment_outlined, Icons.assignment_rounded,
         PlaceholderPage(title: 'تکالیف', icon: Icons.assignment_rounded)),
     _Tab('منابع', Icons.library_books_outlined, Icons.library_books_rounded,
-        PlaceholderPage(title: 'منابع', icon: Icons.library_books_rounded)),
+        ResourceBankScreen()),
     _Tab('پروفایل', Icons.person_outline_rounded, Icons.person_rounded,
         StudentProfileScreen()),
   ];
