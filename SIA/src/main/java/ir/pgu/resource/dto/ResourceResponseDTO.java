@@ -11,12 +11,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResourceResponseDTO {
+
     private Long id;
     private Long courseId;
     private String courseTitle;
     private Long uploaderId;
     private String uploaderName;
     private String title;
+    private String description;
     private String resourceType;
     private String fileType;
     private long fileSize;

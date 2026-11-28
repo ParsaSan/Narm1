@@ -4,16 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7261061-6de2-4e20-ad75-2285c7d3bff6" name="Changes" comment="Merge pull request #19 from ParsaSan/Alko&#10;&#10;fix: sync real course IDs with recent visits and finalize dashboard">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ir/pgu/security/JwtAuthenticationFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ir/pgu/security/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ir/pgu/user/service/JwtService.java" afterDir="false" />
+    <list default="true" id="a7261061-6de2-4e20-ad75-2285c7d3bff6" name="Changes" comment="jwt changes">
+      <change afterPath="$PROJECT_DIR$/src/main/java/ir/pgu/resource/model/Resource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ir/pgu/resource/model/Visibility.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ir/pgu/resource/service/FileStorageService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ir/pgu/user/dto/AuthResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ir/pgu/user/dto/AuthResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ir/pgu/user/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ir/pgu/user/service/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ir/pgu/profile/model/AcademicStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ir/pgu/profile/model/AcademicStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ir/pgu/resource/dto/ResourceResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ir/pgu/resource/dto/ResourceResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ir/pgu/resource/service/ResourceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ir/pgu/resource/service/ResourceService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,7 +127,9 @@
     <MESSAGE value="latest version task sanaz" />
     <MESSAGE value="finished" />
     <MESSAGE value="Merge pull request #19 from ParsaSan/Alko&#10;&#10;fix: sync real course IDs with recent visits and finalize dashboard" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge pull request #19 from ParsaSan/Alko&#10;&#10;fix: sync real course IDs with recent visits and finalize dashboard" />
+    <MESSAGE value="Merge pull request #25 from ParsaSan/zarei&#10;&#10;upload new sprint" />
+    <MESSAGE value="jwt changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="jwt changes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -139,6 +139,11 @@
           <line>17</line>
           <properties field="studentNumber" class="ir.pgu.user.dto.AuthResponse" />
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ir/pgu/resource/service/ResourceService.java</url>
+          <line>64</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
