@@ -20,7 +20,7 @@ class ResourceRepository {
 
   /// ⚠️ موقت: تا زمان آماده شدن اندپوینت‌های /api/resources در بک‌اند روی true بماند.
   /// پس از پوش شدن بک‌اند ۱ و ۲، فقط این مقدار را false کنید.
-  static bool useMockData = true;
+  static bool useMockData = false;
 
   // داده‌های آزمایشی موقت برای تست کامل صفحه و سناریوی ارائه
   static final List<ResourceItem> _mockResources = [
