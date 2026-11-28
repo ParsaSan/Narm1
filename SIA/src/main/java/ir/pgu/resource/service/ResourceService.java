@@ -96,6 +96,7 @@ public class ResourceService {
         String first = uploader.getFirstName() == null ? "" : uploader.getFirstName();
         String last = uploader.getLastName() == null ? "" : uploader.getLastName();
         String uploaderName = (first + " " + last).trim();
+
         if (uploaderName.isEmpty()) {
             uploaderName = uploader.getStudentNumber();
         }
@@ -111,6 +112,7 @@ public class ResourceService {
                 uploader.getId(),
                 uploaderName,
                 r.getTitle(),
+                r.getDescription(),
                 r.getResourceType(),
                 r.getFileType(),
                 r.getFileSize(),
