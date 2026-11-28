@@ -1,15 +1,16 @@
-
 package ir.pgu.user.controller;
 
 import ir.pgu.user.dto.AuthResponse;
 import ir.pgu.user.dto.LoginRequest;
 import ir.pgu.user.service.AuthService;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
